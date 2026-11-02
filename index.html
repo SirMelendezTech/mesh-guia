@@ -447,6 +447,7 @@ const RADIO = {
     note: "Iguales en companions y repeaters, para que la isla sea una sola malla."
   }
 };
+const DISCORD = "https://discord.gg/3v6rRhNRpD";
 const LINKS = [
   ["Documentación de Meshtastic", "https://meshtastic.org/docs/"],
   ["MeshCore en GitHub", "https://github.com/meshcore-dev/MeshCore"],
@@ -615,6 +616,7 @@ function footerHtml() {
   return `<footer class="site-footer">
     <p>Guías escritas por ${esc(author)}${d ? `. Última revisión: ${esc(d.revision)}` : ""}.
       Si algo no coincide con lo que usa tu zona, confirma con la comunidad.</p>
+    <p>¿Dudas o preguntas? Escríbelas en el <a href="${DISCORD}" target="_blank" rel="noopener">Discord de la comunidad</a>.</p>
     <ul>${LINKS.map(([t, u]) => `<li><a href="${u}" target="_blank" rel="noopener">${esc(t)}</a></li>`).join("")}</ul>
   </footer>`;
 }

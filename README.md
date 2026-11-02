@@ -36,6 +36,7 @@ Abre http://localhost:8000. Desde `file://` no funciona, porque el navegador no 
 ## Comunidad
 
 - PRMSH: https://prmsh.com
+- Discord, para dudas o preguntas: https://discord.gg/3v6rRhNRpD
 - Mapa de la malla: https://malla.prmsh.com
 
 Guías escritas por WP4TZV.
