@@ -1,0 +1,901 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mesh PR · Guías de nodos</title>
+<meta name="description" content="Guías de configuración de nodos Meshtastic y MeshCore para la malla de Puerto Rico.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,800;1,400&display=swap">
+<style>
+  /* ---------- tokens ---------- */
+  :root {
+    --paper: #f4f6f8;
+    --surface: #ffffff;
+    --sunk: #e9edf2;
+    --ink: #172033;
+    --muted: #556070;
+    --line: #d9dee5;
+    --link: #1f5bc4;
+    --focus: #1f5bc4;
+    --mt: #17703f;
+    --mt-soft: #e3f2e8;
+    --mc: #3a47b8;
+    --mc-soft: #e7e9fb;
+    --logo-edge: #2f66c8;
+    --logo-hill: #9aa6b8;
+    --logo-peak: #e99a0c;
+    --accent: var(--link);
+    --accent-soft: var(--sunk);
+    --header-h: 57px;
+    --sans: "Atkinson Hyperlegible Next", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: "Atkinson Hyperlegible Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #121826; --surface: #1a2233; --sunk: #232c40; --ink: #e6eaf2; --muted: #a1abbd;
+      --line: #2c3649; --link: #8db8ff; --focus: #8db8ff;
+      --mt: #6fd49a; --mt-soft: #183326; --mc: #a3acff; --mc-soft: #232a52;
+      --logo-edge: #7db4ff; --logo-hill: #56627a; --logo-peak: #ffb938;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #121826; --surface: #1a2233; --sunk: #232c40; --ink: #e6eaf2; --muted: #a1abbd;
+    --line: #2c3649; --link: #8db8ff; --focus: #8db8ff;
+    --mt: #6fd49a; --mt-soft: #183326; --mc: #a3acff; --mc-soft: #232a52;
+    --logo-edge: #7db4ff; --logo-hill: #56627a; --logo-peak: #ffb938;
+    color-scheme: dark;
+  }
+
+  /* ---------- base ---------- */
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: calc(var(--header-h) + 16px); -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font: 17px/1.6 var(--sans);
+  }
+  a { color: var(--link); text-underline-offset: .18em; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+  .skip {
+    position: absolute; left: 12px; top: -48px; z-index: 30;
+    background: var(--surface); color: var(--ink); padding: 8px 12px; border-radius: 6px;
+  }
+  .skip:focus { top: 8px; }
+  .role { font-family: var(--mono); font-weight: 600; font-size: .9em; letter-spacing: 0; }
+
+  /* ---------- header ---------- */
+  .site-header {
+    position: sticky; top: 0; z-index: 20;
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 16px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+  }
+  .brand {
+    display: inline-flex; align-items: center; gap: 10px;
+    color: var(--ink); text-decoration: none; font-weight: 800; font-size: 1.1rem;
+  }
+  .logo { flex: none; }
+  .logo .hill { stroke: var(--logo-hill); }
+  .logo .edge { stroke: var(--logo-edge); }
+  .logo .node { fill: var(--surface); stroke: var(--logo-edge); }
+  .logo .peak { fill: var(--logo-peak); }
+  .tagline { color: var(--muted); font-size: .9rem; }
+  .spacer { flex: 1; }
+  .icon-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+    border-radius: 8px; padding: 6px 10px; cursor: pointer; font: inherit; font-size: .92rem;
+    min-height: 40px;
+  }
+  .icon-btn:hover { background: var(--sunk); }
+  .icon-btn svg { width: 18px; height: 18px; }
+  #menuBtn { display: none; }
+
+  /* ---------- layout ---------- */
+  .layout {
+    display: grid;
+    grid-template-columns: 250px minmax(0, 1fr);
+    max-width: 1320px; margin: 0 auto;
+  }
+  .sidebar {
+    position: sticky; top: var(--header-h); align-self: start;
+    height: calc(100vh - var(--header-h)); overflow-y: auto;
+    padding: 24px 12px 24px 16px;
+    border-right: 1px solid var(--line);
+  }
+  .nav-home {
+    display: block; padding: 8px 10px; margin-bottom: 8px; border-radius: 8px;
+    color: var(--ink); text-decoration: none; font-weight: 600;
+  }
+  .nav-group {
+    display: flex; align-items: center; gap: 8px;
+    margin: 20px 10px 6px; font-size: .95rem; font-weight: 800;
+  }
+  .nav-group::before {
+    content: ""; width: 9px; height: 9px; border-radius: 50%; background: currentColor;
+  }
+  .nav-group.mt { color: var(--mt); }
+  .nav-group.mc { color: var(--mc); }
+  .nav-link {
+    display: block; padding: 7px 10px; border-radius: 8px;
+    color: var(--ink); text-decoration: none; line-height: 1.3;
+  }
+  .nav-link .role { display: block; font-size: .86rem; }
+  .nav-link .nav-place { display: block; color: var(--muted); font-size: .82rem; }
+  .nav-home:hover, .nav-link:hover { background: var(--sunk); }
+  .nav-link[aria-current="page"] { background: var(--sunk); box-shadow: inset 3px 0 0 var(--accent); }
+  .nav-link.mt { --accent: var(--mt); }
+  .nav-link.mc { --accent: var(--mc); }
+  .backdrop { display: none; }
+  main { padding: 32px 36px 72px; min-width: 0; }
+  main:focus { outline: none; }
+
+  /* ---------- home ---------- */
+  .intro { max-width: 40rem; margin-bottom: 32px; }
+  .intro h1 {
+    margin: 0 0 10px; font-size: clamp(2rem, 4.4vw, 2.75rem); line-height: 1.1;
+    font-weight: 800; letter-spacing: -.01em;
+  }
+  .intro p { margin: 0; color: var(--muted); font-size: 1.06rem; }
+
+  .picker {
+    display: grid;
+    grid-template-columns: minmax(190px, .9fr) minmax(0, 1.3fr) minmax(0, 1.3fr);
+    background: var(--surface);
+    border: 1px solid var(--line); border-radius: 14px;
+    overflow: hidden;
+  }
+  .picker-head {
+    padding: 12px 18px; font-weight: 800; font-size: .95rem;
+    border-bottom: 1px solid var(--line); background: var(--sunk);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .picker-head.mt { color: var(--mt); }
+  .picker-head.mc { color: var(--mc); }
+  .picker-head.mt::before, .picker-head.mc::before {
+    content: ""; width: 9px; height: 9px; border-radius: 50%; background: currentColor;
+  }
+  .place, .cell { border-top: 1px solid var(--line); }
+  .picker > .row-first { border-top: 0; }
+  .place {
+    position: relative; padding: 18px 18px 18px 46px;
+  }
+  /* el mástil: una línea que une los tres lugares, de abajo hacia el cerro */
+  .place::before {
+    content: ""; position: absolute; left: 22px; top: 0; bottom: 0;
+    border-left: 2px solid var(--logo-hill);
+  }
+  .place.row-first::before { top: 30px; }
+  .place.row-last::before { bottom: calc(100% - 30px); }
+  .place::after {
+    content: ""; position: absolute; left: 15px; top: 23px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--surface); border: 2px solid var(--logo-edge);
+  }
+  .place.row-first::after { background: var(--logo-peak); border-color: var(--logo-peak); width: 16px; height: 16px; left: 13px; top: 21px; }
+  .place strong { display: block; font-size: 1.05rem; line-height: 1.3; }
+  .place span { display: block; color: var(--muted); font-size: .9rem; margin-top: 2px; }
+  .cell {
+    display: block; padding: 18px; color: var(--ink); text-decoration: none;
+    border-left: 1px solid var(--line);
+  }
+  a.cell:hover { background: var(--cell-soft); }
+  .cell.mt { --cell: var(--mt); --cell-soft: var(--mt-soft); }
+  .cell.mc { --cell: var(--mc); --cell-soft: var(--mc-soft); }
+  .cell .role { display: block; color: var(--cell); font-size: 1rem; }
+  .cell p { margin: 4px 0 0; font-size: .93rem; color: var(--ink); }
+  .cell small { display: block; margin-top: 6px; color: var(--muted); font-size: .82rem; }
+  .cell.empty p { color: var(--muted); margin: 0; }
+  .cell .proj { font-weight: 800; color: var(--cell); }
+
+  .radio-wrap { margin-top: 44px; }
+  .radio-wrap > h2, .others > h2 { font-size: 1.45rem; margin: 0 0 6px; }
+  .radio-wrap > p { margin: 0 0 18px; color: var(--muted); max-width: 40rem; }
+  .radio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .radio {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+    border-top: 4px solid var(--cell); padding: 16px 18px 18px;
+  }
+  .radio.mt { --cell: var(--mt); }
+  .radio.mc { --cell: var(--mc); }
+  .radio-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .radio-top h3 { margin: 0; font-size: 1.1rem; color: var(--cell); flex: 1; }
+  .radio dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 0 16px; }
+  .radio dt, .radio dd { padding: 6px 0; border-bottom: 1px solid var(--line); margin: 0; }
+  .radio dt { color: var(--muted); font-size: .92rem; }
+  .radio dd { font-family: var(--mono); font-weight: 600; }
+  .radio dt:nth-last-of-type(1), .radio dd:last-of-type { border-bottom: 0; }
+  .radio .note { margin: 10px 0 0; color: var(--muted); font-size: .88rem; }
+  .copy-btn { font-size: .85rem; min-height: 36px; padding: 4px 10px; }
+  .copy-status { font-size: .85rem; color: var(--muted); }
+
+  .others { margin-top: 44px; }
+  .others ul { margin: 8px 0 0; padding-left: 20px; }
+
+  .site-footer {
+    margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--line);
+    color: var(--muted); font-size: .9rem; max-width: 46rem;
+  }
+  .site-footer p { margin: 0 0 8px; }
+  .site-footer ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 6px 20px; }
+
+  /* ---------- vista de guía ---------- */
+  .doc-bar {
+    display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center;
+    margin-bottom: 14px; font-size: .92rem;
+  }
+  .doc-bar .back { text-decoration: none; font-weight: 600; }
+  .doc-bar .actions { display: flex; gap: 8px; margin-left: auto; }
+  .doc-bar .actions a { text-decoration: none; }
+  .tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-weight: 800; font-size: .88rem; color: var(--accent);
+  }
+  .tag::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: currentColor; }
+  .radio-strip {
+    display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 0 0 24px;
+    padding: 10px 14px; border-radius: 10px; background: var(--accent-soft);
+    font-size: .9rem; max-width: 72ch;
+  }
+  .radio-strip div { display: flex; gap: 6px; }
+  .radio-strip dt { color: var(--muted); }
+  .radio-strip dd { margin: 0; font-family: var(--mono); font-weight: 600; }
+  .doc.mt { --accent: var(--mt); --accent-soft: var(--mt-soft); }
+  .doc.mc { --accent: var(--mc); --accent-soft: var(--mc-soft); }
+  .doc-body { display: grid; grid-template-columns: minmax(0, 72ch); gap: 40px; }
+  .toc-side { display: none; }
+  .toc-title { font-weight: 800; font-size: .95rem; margin: 0 0 8px; }
+  .toc ol { list-style: none; margin: 0; padding: 0; }
+  .toc a {
+    display: block; padding: 5px 10px; border-radius: 6px; line-height: 1.3;
+    color: var(--muted); text-decoration: none; font-size: .9rem;
+  }
+  .toc a:hover { background: var(--sunk); color: var(--ink); }
+  .toc a[aria-current="true"] { color: var(--ink); box-shadow: inset 3px 0 0 var(--accent); background: var(--accent-soft); }
+  .toc-inline {
+    margin: 0 0 24px; border: 1px solid var(--line); border-radius: 10px;
+    background: var(--surface); max-width: 72ch;
+  }
+  .toc-inline summary { cursor: pointer; padding: 10px 14px; font-weight: 600; }
+  .toc-inline .toc { padding: 0 6px 10px; }
+  @media (min-width: 1240px) {
+    .doc-body { grid-template-columns: minmax(0, 72ch) 230px; }
+    .toc-side {
+      display: block; position: sticky; top: calc(var(--header-h) + 24px); align-self: start;
+      max-height: calc(100vh - var(--header-h) - 48px); overflow-y: auto;
+    }
+    .toc-inline { display: none; }
+  }
+
+  /* ---------- markdown ---------- */
+  .md h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 12px; font-weight: 800; letter-spacing: -.01em; }
+  .md h2 { font-size: 1.5rem; line-height: 1.25; margin: 44px 0 12px; padding-top: 14px; border-top: 1px solid var(--line); }
+  .md h3 { font-size: 1.2rem; margin: 28px 0 8px; }
+  .md h4 { font-size: 1.02rem; margin: 22px 0 6px; }
+  .md .anchor {
+    margin-left: 8px; text-decoration: none; color: var(--muted); font-weight: 400;
+    opacity: .45;
+  }
+  .md .anchor:hover, .md .anchor:focus-visible { opacity: 1; color: var(--accent); }
+  .md p, .md ul, .md ol { margin: 0 0 14px; }
+  .md li { margin: 4px 0; }
+  .md li > input[type="checkbox"] { margin-right: 8px; transform: scale(1.15); }
+  .md hr { border: 0; border-top: 1px solid var(--line); margin: 28px 0; }
+  .md blockquote {
+    margin: 0 0 18px; padding: 12px 16px;
+    border-left: 4px solid var(--accent); background: var(--accent-soft);
+    border-radius: 0 10px 10px 0;
+  }
+  .md blockquote p:last-child { margin-bottom: 0; }
+  .md code {
+    font: .88em/1.4 var(--mono);
+    background: var(--sunk); padding: 2px 5px; border-radius: 5px;
+  }
+  .md .role { background: none; padding: 0; }
+  .md pre {
+    background: var(--sunk); padding: 14px 16px; border-radius: 10px;
+    overflow-x: auto; margin: 0 0 16px;
+  }
+  .md pre code { background: none; padding: 0; font-size: .86rem; }
+  .table-wrap { overflow-x: auto; margin: 0 0 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+  .md table { border-collapse: collapse; width: 100%; font-size: .93rem; }
+  .md th, .md td { padding: 9px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+  .md th { background: var(--sunk); font-weight: 600; }
+  .md tr:last-child td { border-bottom: 0; }
+  .md img { max-width: 100%; }
+
+  .msg { padding: 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--muted); max-width: 46rem; }
+
+  /* ---------- móvil ---------- */
+  @media (max-width: 860px) {
+    #menuBtn { display: inline-flex; }
+    .tagline { display: none; }
+    .layout { grid-template-columns: 1fr; }
+    .sidebar {
+      position: fixed; top: var(--header-h); left: 0; bottom: 0; z-index: 19;
+      width: 84%; max-width: 320px; height: auto;
+      background: var(--surface); border-right: 1px solid var(--line);
+      transform: translateX(-100%); visibility: hidden;
+      transition: transform .2s ease, visibility 0s linear .2s;
+    }
+    .sidebar.open { transform: none; visibility: visible; transition: transform .2s ease; }
+    .backdrop {
+      display: block; position: fixed; inset: var(--header-h) 0 0 0; z-index: 18;
+      background: rgba(10, 14, 24, .45); border: 0; padding: 0; cursor: pointer;
+    }
+    .backdrop[hidden] { display: none; }
+    main { padding: 22px 16px 56px; }
+    .md h1 { font-size: 1.6rem; }
+  }
+  @media (max-width: 720px) {
+    .picker { grid-template-columns: 1fr; }
+    .picker-head:not(.blank) { display: none; }
+    .picker-head.blank { display: none; }
+    .place { padding-bottom: 8px; }
+    .cell { border-left: 0; border-top: 0; padding: 10px 18px 14px 46px; }
+    .cell + .cell { padding-top: 4px; }
+    .place::before { display: none; }
+  }
+  @media (min-width: 721px) {
+    .cell .proj { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sidebar, .sidebar.open { transition: none; }
+    html { scroll-behavior: auto; }
+  }
+
+  /* ---------- impresión ---------- */
+  @media print {
+    :root, :root:not([data-theme="light"]), :root[data-theme="dark"] {
+      --paper: #fff; --surface: #fff; --sunk: #f1f3f5; --ink: #000; --muted: #333;
+      --line: #bbb; --link: #000; --mt: #0f5a31; --mt-soft: #fff; --mc: #2b3590; --mc-soft: #fff;
+      color-scheme: light;
+    }
+    body { font-size: 10.5pt; background: #fff; }
+    .site-header, .sidebar, .backdrop, .skip, .toc-side, .toc-inline, .doc-bar .actions, .copy-btn, .copy-status, .md .anchor { display: none !important; }
+    .layout { display: block; max-width: none; }
+    main { padding: 0; }
+    .doc-body { display: block; }
+    .md a[href^="http"]::after { content: " (" attr(href) ")"; font-size: .85em; word-break: break-all; }
+    .table-wrap { overflow: visible; border: 0; }
+    .md table { border: 1px solid #bbb; }
+    tr, pre, blockquote, .radio, .place, .cell { break-inside: avoid; }
+    h2, h3, h4 { break-after: avoid; }
+    .md h2 { margin-top: 24px; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#content">Saltar al contenido</a>
+<header class="site-header">
+  <button id="menuBtn" class="icon-btn" aria-label="Guías" aria-expanded="false" aria-controls="sidebar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+  </button>
+  <a class="brand" href="#/">
+    <svg class="logo" viewBox="0 0 32 32" width="30" height="30" fill="none" aria-hidden="true" focusable="false">
+      <path class="hill" d="M3 25.5c4.5-3.2 8-4.6 13-4.6s8.5 1.4 13 4.6" stroke-width="1.6" stroke-linecap="round"/>
+      <path class="edge" d="M6 19 16 7.5 26 15" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle class="node" cx="6" cy="19" r="3" stroke-width="1.8"/>
+      <circle class="node" cx="26" cy="15" r="3" stroke-width="1.8"/>
+      <circle class="peak" cx="16" cy="7.5" r="3.4"/>
+    </svg>
+    Mesh PR
+  </a>
+  <span class="tagline">Guías de nodos para Puerto Rico</span>
+  <span class="spacer"></span>
+  <button id="themeBtn" class="icon-btn" aria-pressed="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/></svg>
+    <span>Tema oscuro</span>
+  </button>
+</header>
+
+<div class="layout">
+  <nav id="sidebar" class="sidebar" aria-label="Guías"></nav>
+  <button id="backdrop" class="backdrop" hidden tabindex="-1" aria-label="Cerrar menú"></button>
+  <main id="content" tabindex="-1"><div class="msg">Cargando guías…</div></main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+<script>
+/* ============================================================
+   CONFIGURACIÓN
+   - ROLES: qué guía va en cada celda del selector de la portada.
+     Para añadir una guía nueva, sube el .md al mismo folder que
+     este index.html y agrégala aquí. Si no está en ROLES, sale
+     igual en "Otras guías" (en GitHub Pages los .md se detectan
+     solos).
+   - RADIO: valores de radio de la isla que salen en la portada
+     y arriba de cada guía. El firmware se lee de cada .md.
+   ============================================================ */
+const PLACES = [
+  { id: "alto", name: "Cerro, torre o techo alto", hint: "Infraestructura fija con línea de vista." },
+  { id: "casa", name: "Casa o techo propio", hint: "Una base personal para tus otros nodos." },
+  { id: "portatil", name: "Portátil", hint: "En la mano, la mochila o el carro." }
+];
+const PROJECTS = { Meshtastic: "mt", MeshCore: "mc" };
+const ROLES = [
+  { file: "meshtastic-pr-cliente-vs-mute.md", project: "Meshtastic", place: "portatil",
+    label: "CLIENT / CLIENT_MUTE", desc: "Cuándo retransmitir y cuándo callar para ahorrar airtime y batería." },
+  { file: "meshtastic-pr-client-base.md", project: "Meshtastic", place: "casa",
+    label: "CLIENT_BASE", desc: "Tu base retransmite con prioridad lo que entra y sale de tus nodos favoritos." },
+  { file: "meshtastic-pr-router-router-late.md", project: "Meshtastic", place: "alto",
+    label: "ROUTER / ROUTER_LATE", desc: "Cuándo un nodo fijo puede ser router y cómo promoverlo." },
+  { file: "meshcore-companion-pr.md", project: "MeshCore", place: "portatil",
+    label: "Companion", desc: "Nodo portátil conectado a tu teléfono por BLE, USB o WiFi." },
+  { file: "meshcore-repeater-roomserver-pr.md", project: "MeshCore", place: "alto",
+    label: "Repeater / Room Server", desc: "Repeater extiende la cobertura. Room Server guarda mensajes para un grupo." }
+];
+/* Celdas sin guía propia: texto con enlaces a otras guías. */
+const GAPS = {
+  "MeshCore:casa": `No tiene un rol de base. En casa usa <a href="#/meshcore-companion-pr.md">Companion</a>;
+    si el punto es alto y tiene energía estable, <a href="#/meshcore-repeater-roomserver-pr.md">Repeater</a>.`
+};
+const RADIO = {
+  Meshtastic: {
+    rows: [["Región", "US"], ["Modem preset", "LONG_FAST"], ["Hop limit", "3 (máximo 5)"]],
+    note: "Usa el preset de la comunidad local. Uno distinto te deja aislado; confirma con el grupo antes de cambiarlo."
+  },
+  MeshCore: {
+    rows: [["Preset", "USA/Canada (Recommended)"], ["Frecuencia", "910.525 MHz"], ["Bandwidth", "62.5 kHz"],
+           ["Spreading factor", "7"], ["Coding rate", "5"], ["Path hash", "2 bytes"]],
+    note: "Iguales en companions y repeaters, para que la isla sea una sola malla."
+  }
+};
+const LINKS = [
+  ["Documentación de Meshtastic", "https://meshtastic.org/docs/"],
+  ["MeshCore en GitHub", "https://github.com/meshcore-dev/MeshCore"],
+  ["Comunidad PRMSH", "https://prmsh.com"],
+  ["Mapa de la malla", "https://malla.prmsh.com"]
+];
+
+/* ============================================================ */
+const GROUP_ORDER = ["Meshtastic", "MeshCore", "Otros"];
+const ROLE_RE = /^(CLIENT(_MUTE|_BASE|_HIDDEN)?|ROUTER(_LATE|_CLIENT)?|REPEATER|TRACKER|SENSOR|TAK(_TRACKER)?|LOST_AND_FOUND)$/;
+const $ = (s, r = document) => r.querySelector(s);
+const nav = $("#sidebar");
+const main = $("#content");
+const header = $(".site-header");
+let docs = [];
+let currentFile = null;
+let firstRoute = true;
+
+marked.setOptions({ gfm: true, breaks: false });
+
+/* ---------- utilidades ---------- */
+function groupOf(file) {
+  const n = file.toLowerCase();
+  if (n.startsWith("meshtastic")) return "Meshtastic";
+  if (n.startsWith("meshcore")) return "MeshCore";
+  return "Otros";
+}
+const roleOf = (file) => ROLES.find((r) => r.file === file);
+const projClass = (g) => PROJECTS[g] || "";
+const docFor = (file) => docs.find((d) => d.file === file);
+function prettify(file) { return file.replace(/\.md$/i, "").replace(/[-_]+/g, " "); }
+function cleanTitle(t) {
+  return t.replace(/\*\*/g, "").replace(/^(Meshtastic|MeshCore)(\s+Puerto Rico)?\s*[—–-]\s*/i, "").trim();
+}
+function slug(text) {
+  return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^\w\s-]/g, "").trim().replace(/\s+/g, "-");
+}
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+const href = (file, id) => `#/${encodeURIComponent(file)}${id ? "#" + id : ""}`;
+function firmwareOf(project) {
+  const d = docs.find((x) => x.group === project && x.firmware);
+  return d ? d.firmware : null;
+}
+function radioRows(project) {
+  const r = RADIO[project];
+  if (!r) return [];
+  const fw = firmwareOf(project);
+  return fw ? [...r.rows, ["Firmware estable", fw]] : r.rows;
+}
+
+/* ---------- altura del encabezado ---------- */
+const setHeaderH = () => document.documentElement.style.setProperty("--header-h", header.offsetHeight + "px");
+setHeaderH();
+if ("ResizeObserver" in window) new ResizeObserver(setHeaderH).observe(header);
+
+/* ---------- detección automática en GitHub Pages ---------- */
+const CACHE_KEY = "meshpr-docs";
+const CACHE_TTL = 60 * 60 * 1000; // 1 hora: la API de GitHub sin token permite 60 consultas/hora por IP
+async function discover() {
+  if (!location.hostname.endsWith("github.io")) return null;
+  try {
+    const c = JSON.parse(localStorage.getItem(CACHE_KEY) || "null");
+    if (c && Date.now() - c.t < CACHE_TTL && Array.isArray(c.files)) return c.files;
+  } catch {}
+  const owner = location.hostname.split(".")[0];
+  const seg = location.pathname.split("/").filter((s) => s && !/\.html?$/i.test(s));
+  const repo = seg.length ? seg[0] : `${owner}.github.io`;
+  const dir = seg.slice(1).join("/");
+  try {
+    const r = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${dir}`);
+    if (!r.ok) return null;
+    const items = await r.json();
+    const md = items
+      .filter((i) => i.type === "file" && /\.md$/i.test(i.name) && !/^readme\.md$/i.test(i.name))
+      .map((i) => i.name);
+    if (!md.length) return null;
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), files: md })); } catch {}
+    return md;
+  } catch { return null; }
+}
+
+/* ---------- carga de archivos ---------- */
+async function loadDoc(d) {
+  if (d.text != null || d.error) return d;
+  try {
+    const r = await fetch(encodeURI(d.file), { cache: "no-cache" });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    d.text = await r.text();
+    const h1 = d.text.match(/^#\s+(.+)$/m);
+    if (h1) d.title = cleanTitle(h1[1]);
+    const fw = d.text.match(/Firmware estable:\s*\*\*([^*]+)\*\*/i);
+    if (fw) d.firmware = fw[1].trim();
+    const rev = d.text.match(/Última revisión:\s*([^·\n]+)/i);
+    if (rev) d.revision = rev[1].trim();
+    const au = d.text.match(/Autor:\s*([^·\n]+)/i);
+    if (au) d.author = au[1].trim();
+  } catch (e) {
+    d.error = e.message;
+  }
+  return d;
+}
+
+/* ---------- navegación lateral ---------- */
+function navLabel(d) {
+  const r = roleOf(d.file);
+  if (!r) return `<span>${esc(d.title)}</span>`;
+  const place = PLACES.find((p) => p.id === r.place);
+  return `<span class="role">${esc(r.label)}</span><span class="nav-place">${esc(place ? place.name : "")}</span>`;
+}
+function renderNav() {
+  let html = `<a class="nav-home" href="#/"${currentFile ? "" : ' aria-current="page"'}>Inicio</a>`;
+  for (const g of GROUP_ORDER) {
+    const list = docs.filter((d) => d.group === g && !d.error);
+    if (!list.length) continue;
+    const pc = projClass(g);
+    html += `<h2 class="nav-group ${pc}">${g === "Otros" ? "Otras guías" : g}</h2>`;
+    for (const d of list) {
+      const cur = d.file === currentFile ? ' aria-current="page"' : "";
+      html += `<a class="nav-link ${pc}" href="${href(d.file)}"${cur}>${navLabel(d)}</a>`;
+    }
+  }
+  nav.innerHTML = html;
+}
+
+/* ---------- portada ---------- */
+function cellHtml(project, placeId, rowCls) {
+  const pc = projClass(project);
+  const r = ROLES.find((x) => x.project === project && x.place === placeId);
+  const proj = `<span class="proj">${project}: </span>`;
+  if (!r) {
+    const gap = GAPS[`${project}:${placeId}`];
+    return `<div class="cell empty ${pc} ${rowCls}">${proj}<p>${gap || "Sin guía todavía."}</p></div>`;
+  }
+  const d = docFor(r.file);
+  if (!d || d.error) {
+    return `<div class="cell empty ${pc} ${rowCls}">${proj}<span class="role">${esc(r.label)}</span>
+      <p>No se pudo cargar la guía${d && d.error ? ` (${esc(d.error)})` : ""}.</p></div>`;
+  }
+  return `<a class="cell ${pc} ${rowCls}" href="${href(r.file)}">
+    ${proj}<span class="role">${esc(r.label)}</span>
+    <p>${esc(r.desc)}</p>
+    ${d.firmware ? `<small>Firmware ${esc(d.firmware)}</small>` : ""}
+  </a>`;
+}
+function radioCard(project) {
+  const pc = projClass(project);
+  const rows = radioRows(project);
+  return `<section class="radio ${pc}" aria-labelledby="radio-${pc}">
+    <div class="radio-top">
+      <h3 id="radio-${pc}">${project}</h3>
+      <span class="copy-status" role="status" aria-live="polite"></span>
+      <button class="icon-btn copy-btn" type="button" data-copy="${project}">Copiar valores</button>
+    </div>
+    <dl>${rows.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl>
+    <p class="note">${esc(RADIO[project].note)}</p>
+  </section>`;
+}
+function footerHtml() {
+  const d = docs.find((x) => x.revision);
+  const author = (docs.find((x) => x.author) || {}).author || "WP4TZV";
+  return `<footer class="site-footer">
+    <p>Guías escritas por ${esc(author)}${d ? `. Última revisión: ${esc(d.revision)}` : ""}.
+      Si algo no coincide con lo que usa tu zona, confirma con la comunidad.</p>
+    <ul>${LINKS.map(([t, u]) => `<li><a href="${u}" target="_blank" rel="noopener">${esc(t)}</a></li>`).join("")}</ul>
+  </footer>`;
+}
+function showHome() {
+  currentFile = null;
+  document.title = "Mesh PR · Guías de nodos";
+  renderNav();
+  let html = `<section class="intro">
+      <h1>¿Qué nodo vas a configurar?</h1>
+      <p>Guías para la malla de Puerto Rico (US 902–928 MHz). Escoge dónde va a estar el nodo y qué firmware usa.</p>
+    </section>
+    <div class="picker">
+      <div class="picker-head blank" aria-hidden="true"></div>
+      <div class="picker-head mt" aria-hidden="true">Meshtastic</div>
+      <div class="picker-head mc" aria-hidden="true">MeshCore</div>`;
+  PLACES.forEach((p, i) => {
+    const rc = i === 0 ? "row-first" : i === PLACES.length - 1 ? "row-last" : "";
+    html += `<div class="place ${rc}"><strong>${esc(p.name)}</strong><span>${esc(p.hint)}</span></div>`;
+    html += cellHtml("Meshtastic", p.id, rc) + cellHtml("MeshCore", p.id, rc);
+  });
+  html += `</div>`;
+
+  html += `<section class="radio-wrap" aria-labelledby="radio-title">
+    <h2 id="radio-title">Radio de la isla</h2>
+    <p>Estos valores tienen que ser iguales en todos los nodos de cada red, o no se escuchan entre sí.</p>
+    <div class="radio-grid">${Object.keys(RADIO).map(radioCard).join("")}</div>
+  </section>`;
+
+  const others = docs.filter((d) => !roleOf(d.file) && !d.error);
+  if (others.length) {
+    html += `<section class="others"><h2>Otras guías</h2><ul>${others
+      .map((d) => `<li><a href="${href(d.file)}">${esc(d.title)}</a>${d.group !== "Otros" ? ` (${d.group})` : ""}</li>`)
+      .join("")}</ul></section>`;
+  }
+  html += footerHtml();
+  main.innerHTML = html;
+  spyHeads = [];
+}
+
+/* ---------- copiar valores de radio ---------- */
+main.addEventListener("click", async (e) => {
+  const btn = e.target.closest("[data-copy]");
+  if (!btn) return;
+  const project = btn.dataset.copy;
+  const text = `${project} (Puerto Rico)\n` + radioRows(project).map(([k, v]) => `${k}: ${v}`).join("\n");
+  const status = btn.parentElement.querySelector(".copy-status");
+  try {
+    await navigator.clipboard.writeText(text);
+    status.textContent = "Copiado";
+  } catch {
+    status.textContent = "No se pudo copiar. Selecciona los valores a mano.";
+  }
+  setTimeout(() => { status.textContent = ""; }, 2500);
+});
+
+/* ---------- vista de una guía ---------- */
+function tocHtml(heads, file) {
+  return `<ol>${heads.map((h) => `<li><a href="${href(file, h.id)}" data-id="${h.id}">${esc(h.text)}</a></li>`).join("")}</ol>`;
+}
+async function showDoc(file, anchor) {
+  let d = docFor(file);
+  if (!d) {
+    d = { file, group: groupOf(file), title: prettify(file) };
+    docs.push(d);
+  }
+  currentFile = file;
+  renderNav();
+  main.innerHTML = `<div class="msg">Cargando ${esc(file)}…</div>`;
+  await loadDoc(d);
+  if (currentFile !== file) return; // el usuario navegó a otra parte mientras cargaba
+  if (d.error) {
+    main.innerHTML = `<div class="doc-bar"><a class="back" href="#/">← Todas las guías</a></div>
+      <div class="msg">No se pudo abrir <code>${esc(file)}</code> (${esc(d.error)}). Revisa que el archivo exista en el repositorio.</div>`;
+    return;
+  }
+  const r = roleOf(file);
+  document.title = `${r ? r.label : d.title} · Mesh PR`;
+  renderNav();
+  const pc = projClass(d.group);
+  const rows = radioRows(d.group);
+  main.innerHTML = `<div class="doc ${pc}">
+    <div class="doc-bar">
+      <a class="back" href="#/">← Todas las guías</a>
+      ${pc ? `<span class="tag">${d.group}</span>` : ""}
+      <span class="actions">
+        <button class="icon-btn" type="button" id="printBtn">Imprimir</button>
+        <a class="icon-btn" href="${encodeURI(d.file)}" download>Descargar .md</a>
+      </span>
+    </div>
+    ${rows.length ? `<dl class="radio-strip" aria-label="Radio ${d.group} de la isla">${rows
+      .map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>` : ""}
+    <div class="doc-body">
+      <div>
+        <details class="toc-inline"><summary>En esta guía</summary><nav class="toc" aria-label="En esta guía"></nav></details>
+        <article class="md">${DOMPurify.sanitize(marked.parse(d.text))}</article>
+      </div>
+      <aside class="toc-side"><p class="toc-title">En esta guía</p><nav class="toc" aria-label="Secciones"></nav></aside>
+    </div>
+  </div>`;
+  const article = $(".md", main);
+  const heads = enhance(article, d.file);
+  if (heads.length) {
+    main.querySelectorAll(".toc").forEach((t) => { t.innerHTML = tocHtml(heads, d.file); });
+  } else {
+    main.querySelectorAll(".toc-inline, .toc-side").forEach((t) => t.remove());
+  }
+  $("#printBtn").addEventListener("click", () => window.print());
+  spyHeads = heads.map((h) => h.el);
+  if (anchor) scrollToAnchor(anchor);
+  else window.scrollTo(0, 0);
+  updateSpy();
+}
+
+/* ---------- mejoras al HTML renderizado ---------- */
+function enhance(root, file) {
+  const known = new Set(docs.map((d) => d.file));
+  const heads = [];
+  const used = {};
+  root.querySelectorAll("h1, h2, h3, h4").forEach((h) => {
+    const text = h.textContent.trim();
+    let id = slug(text) || "seccion";
+    if (used[id]) id += "-" + used[id]++; else used[id] = 1;
+    h.id = id;
+    if (h.tagName === "H2") heads.push({ id, text, el: h });
+    if (h.tagName !== "H1") {
+      const a = document.createElement("a");
+      a.className = "anchor";
+      a.href = href(file, id);
+      a.textContent = "#";
+      a.setAttribute("aria-label", `Enlace a la sección ${text}`);
+      h.appendChild(a);
+    }
+  });
+
+  root.querySelectorAll("table").forEach((t) => {
+    const w = document.createElement("div");
+    w.className = "table-wrap";
+    w.tabIndex = 0; // se puede desplazar con teclado
+    w.setAttribute("role", "region");
+    w.setAttribute("aria-label", "Tabla");
+    t.parentNode.insertBefore(w, t);
+    w.appendChild(t);
+  });
+
+  root.querySelectorAll("a[href]").forEach((a) => {
+    const h = a.getAttribute("href");
+    if (a.classList.contains("anchor")) return;
+    if (/^https?:\/\//i.test(h)) {
+      a.target = "_blank"; a.rel = "noopener";
+    } else if (/\.md(#.*)?$/i.test(h)) {
+      const [f, frag] = h.split("#");
+      a.href = href(f.split("/").pop(), frag);
+    } else if (h.startsWith("#")) {
+      a.href = href(file, h.slice(1));
+    }
+  });
+
+  root.querySelectorAll("code").forEach((c) => {
+    if (c.closest("pre, a")) return;
+    const name = c.textContent.trim();
+    if (known.has(name) && name !== file) {
+      const a = document.createElement("a");
+      a.href = href(name);
+      c.parentNode.insertBefore(a, c);
+      a.appendChild(c);
+    }
+  });
+
+  // nombres de rol (CLIENT_MUTE, ROUTER_LATE…) con el mismo tratamiento en toda la página
+  root.querySelectorAll("strong, code, td, th").forEach((el) => {
+    if (el.children.length) return;
+    if (ROLE_RE.test(el.textContent.trim())) el.classList.add("role");
+  });
+  return heads;
+}
+
+function scrollToAnchor(anchor) {
+  const raw = decodeURIComponent(anchor);
+  const el = document.getElementById(raw) || document.getElementById(slug(raw.replace(/-/g, " ")));
+  if (el) el.scrollIntoView({ block: "start" });
+}
+
+/* ---------- sección actual en el índice ---------- */
+let spyHeads = [];
+let spyTick = false;
+function updateSpy() {
+  spyTick = false;
+  if (!spyHeads.length) return;
+  const limit = header.offsetHeight + 40;
+  let cur = spyHeads[0].id;
+  for (const h of spyHeads) { if (h.getBoundingClientRect().top <= limit) cur = h.id; else break; }
+  main.querySelectorAll(".toc a").forEach((a) => {
+    if (a.dataset.id === cur) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current");
+  });
+}
+window.addEventListener("scroll", () => {
+  if (!spyTick) { spyTick = true; requestAnimationFrame(updateSpy); }
+}, { passive: true });
+
+/* ---------- router ---------- */
+async function route() {
+  setMenu(false, false);
+  const h = location.hash;
+  if (h.startsWith("#/") && h.length > 2) {
+    const rest = h.slice(2);
+    const i = rest.indexOf("#");
+    const file = decodeURIComponent(i === -1 ? rest : rest.slice(0, i));
+    const anchor = i === -1 ? null : rest.slice(i + 1);
+    if (anchor && file === currentFile && $(".md", main)) {
+      scrollToAnchor(anchor);
+      return;
+    }
+    await showDoc(file, anchor);
+  } else {
+    showHome();
+    window.scrollTo(0, 0);
+  }
+  // al navegar, el foco va al contenido nuevo (no en la primera carga)
+  if (!firstRoute && !(h.includes("#", 2))) main.focus({ preventScroll: true });
+  firstRoute = false;
+}
+
+/* ---------- menú móvil ---------- */
+const menuBtn = $("#menuBtn");
+const backdrop = $("#backdrop");
+function setMenu(open, moveFocus = true) {
+  const wasOpen = nav.classList.contains("open");
+  nav.classList.toggle("open", open);
+  backdrop.hidden = !open;
+  menuBtn.setAttribute("aria-expanded", String(open));
+  if (!moveFocus) return;
+  if (open) ($('[aria-current="page"]', nav) || $("a", nav))?.focus();
+  else if (wasOpen) menuBtn.focus();
+}
+menuBtn.addEventListener("click", () => setMenu(!nav.classList.contains("open")));
+backdrop.addEventListener("click", () => setMenu(false));
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && nav.classList.contains("open")) setMenu(false);
+});
+
+/* ---------- tema ---------- */
+const themeBtn = $("#themeBtn");
+const darkMq = matchMedia("(prefers-color-scheme: dark)");
+try {
+  const saved = localStorage.getItem("meshpr-theme");
+  if (saved) document.documentElement.dataset.theme = saved;
+} catch {}
+const isDark = () => (document.documentElement.dataset.theme || (darkMq.matches ? "dark" : "light")) === "dark";
+const syncThemeBtn = () => themeBtn.setAttribute("aria-pressed", String(isDark()));
+syncThemeBtn();
+darkMq.addEventListener?.("change", syncThemeBtn);
+themeBtn.addEventListener("click", () => {
+  const next = isDark() ? "light" : "dark";
+  document.documentElement.dataset.theme = next;
+  try { localStorage.setItem("meshpr-theme", next); } catch {}
+  syncThemeBtn();
+});
+
+/* ---------- inicio ---------- */
+(async function init() {
+  if (location.protocol === "file:") {
+    main.innerHTML = `<div class="msg">Abre esta página desde GitHub Pages o con un servidor local
+      (por ejemplo <code>python3 -m http.server</code>). El navegador no deja leer los .md
+      directamente desde <code>file://</code>.</div>`;
+    return;
+  }
+  const listed = ROLES.map((r) => r.file);
+  const files = (await discover()) || listed;
+  const order = (f) => { const i = listed.indexOf(f); return i === -1 ? 999 : i; };
+  docs = files
+    .map((file) => ({ file, group: groupOf(file), title: prettify(file) }))
+    .sort((a, b) => GROUP_ORDER.indexOf(a.group) - GROUP_ORDER.indexOf(b.group)
+      || order(a.file) - order(b.file) || a.file.localeCompare(b.file));
+  await Promise.all(docs.map(loadDoc));
+  window.addEventListener("hashchange", route);
+  route();
+})();
+</script>
+</body>
+</html>
