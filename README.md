@@ -2,7 +2,7 @@
 
 Guías para configurar nodos Meshtastic y MeshCore en la malla de Puerto Rico (región US, 902–928 MHz).
 
-Página: https://sirmelendeztech.github.io/mesh-guia/
+Página: https://guia.prmsh.com
 
 ## Guías
 
