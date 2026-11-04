@@ -735,6 +735,7 @@ function footerHtml() {
     <p>Guías escritas por ${esc(author)}${d ? `. Última revisión: ${esc(d.revision)}` : ""}.
       Si algo no coincide con lo que usa tu zona, confirma con la comunidad.</p>
     <p>¿Dudas o preguntas? Escríbelas en el <a href="${DISCORD}" target="_blank" rel="noopener">Discord de la comunidad</a>.</p>
+    <p>Puedes copiar y adaptar estas guías bajo la licencia <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.es" target="_blank" rel="noopener">CC BY-SA 4.0</a>, dando crédito a ${esc(author)}.</p>
     <ul>${LINKS.map(([t, u]) => `<li><a href="${u}" target="_blank" rel="noopener">${esc(t)}</a></li>`).join("")}</ul>
   </footer>`;
 }

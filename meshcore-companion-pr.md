@@ -1,155 +1,145 @@
-# MeshCore Puerto Rico — Configuración de Nodos Companion
+# Nodos Companion de MeshCore en Puerto Rico
 
-**Guía para nodos portátiles (handhelds, mochila, vehículo)**
-Autor: WP4TZV · Malla: Puerto Rico (región US 902–928 MHz) · Firmware estable: **v1.18.0** · Última revisión: noviembre 2026
+Para nodos portátiles: en la mano, en la mochila o en el carro.
 
----
+- Autor: WP4TZV
+- Malla: Puerto Rico, región US (902–928 MHz)
+- Firmware estable: **v1.18.0**
+- Última revisión: noviembre 2026
 
 ## 1. Resumen rápido
 
-| Parámetro | Valor PR | Notas |
+| Parámetro | Valor en PR | Notas |
 |---|---|---|
-| Preset en la app | **USA/Canada (Recommended)** | PR está en la banda ISM 902–928 MHz de EE.UU. |
-| Frecuencia | **910.525 MHz** | |
-| Bandwidth | **62.5 kHz** | Preset "narrow" adoptado a finales de 2025 |
-| Spreading Factor | **7** | |
-| Coding Rate | **5** (4/5) | |
-| Path hash size | **2 bytes** | App → Settings → Experimental → Default Path Hash Size |
-| TX power | Máximo que soporte el radio (típico 22 dBm en SX1262) | Ver §6 para baterías |
-| Firmware | **Companion** (BLE, USB o WiFi según el caso) | Nunca Repeater en un portable |
+| Preset en la app | USA/Canada (Recommended) | PR usa la banda ISM de 902–928 MHz de EE.UU. |
+| Frecuencia | 910.525 MHz | |
+| Bandwidth | 62.5 kHz | Preset "narrow", adoptado a finales de 2025 |
+| Spreading factor | 7 | |
+| Coding rate | 5 (4/5) | |
+| Path hash size | 2 bytes | App → Settings → Experimental → Default Path Hash Size |
+| TX power | El máximo del radio (22 dBm en un SX1262) | Para ahorrar batería, ver §7 |
+| Firmware | Companion (BLE, USB o WiFi) | Un portable nunca lleva firmware Repeater |
 
-> Si la comunidad MeshCore de PR publica un preset regional propio, ese sustituye esta tabla. Mientras tanto, todos (companions **y** repeaters) deben estar en el preset USA/Canada para que la isla sea una sola malla.
-
----
+Todos los nodos de la isla, companions y repeaters, tienen que usar el preset USA/Canada para que haya una sola malla. Si la comunidad MeshCore de PR publica un preset regional propio, ese reemplaza esta tabla.
 
 ## 2. Por qué estos valores
 
-- **910.525 / 62.5 kHz / SF7 / CR5** es el preset recomendado USA/Canada. Muchas regiones migraron de SF11/250 kHz a este perfil "narrow" porque mejora la entrega de mensajes: menos airtime por paquete = menos colisiones.
-- **SF7 parece "corto"**, pero en MeshCore el alcance lo dan los **repeaters fijos en altura**, no el companion. Con 62.5 kHz de BW se recupera parte de la sensibilidad que se pierde al bajar el SF.
-- **Path hash de 2 bytes:** con 1 byte solo hay 256 IDs posibles; dos repeaters chocan con frecuencia y las trazas/rutas se vuelven ambiguas. 2 bytes = 65,536 IDs y hasta 32 saltos en flood. Repeaters en firmware ≥ 1.14 reenvían cualquier tamaño; los más viejos descartan paquetes de 2–3 bytes, así que conviene que los repeaters de la isla estén actualizados.
-- **Coding Rate:** LoRa manda el CR en el header explícito, así que un CR distinto no rompe la comunicación, pero mantén CR5 para consistencia (algunas redes, como Florida, usan CR8 en repeaters).
+- **910.525 MHz, 62.5 kHz, SF7, CR5** es el preset recomendado para USA/Canada. Muchas regiones dejaron SF11 con 250 kHz y pasaron a este perfil "narrow" porque entrega más mensajes: cada paquete ocupa menos tiempo en el aire y hay menos colisiones.
+- **SF7 parece poco alcance**, pero en MeshCore el alcance lo dan los repeaters fijos en lugares altos, no el companion. El bandwidth de 62.5 kHz recupera parte de la sensibilidad que se pierde con un SF más bajo.
+- **Path hash de 2 bytes.** Con 1 byte hay solo 256 IDs posibles, así que dos repeaters terminan con el mismo ID a menudo y las rutas se confunden. Con 2 bytes hay 65,536 IDs y se permiten hasta 32 saltos en flood. Los repeaters con firmware 1.14 o más nuevo reenvían cualquier tamaño de hash; los más viejos descartan los paquetes de 2 y 3 bytes. Por eso conviene que los repeaters de la isla estén al día.
+- **Coding rate.** LoRa envía el CR en el encabezado del paquete, así que un CR distinto no corta la comunicación. Aun así, usa CR5 para que todos estén iguales. Algunas redes, como la de Florida, usan CR8 en los repeaters.
 
-### Contexto PR
-- Topografía: la **Cordillera Central** y **El Yunque** parten la isla en sombras de RF. Un companion en el valle depende de que haya un repeater con línea de vista.
-- Zonas urbanas de concreto ("RF bunkers"): dentro de casa el companion casi no sale. Ventana, balcón o antena externa hacen una diferencia enorme.
-- Viniendo de Meshtastic: un **Companion ≈ CLIENT_MUTE**. No retransmite nada. Toda la retransmisión la hacen Repeaters (y Room Servers).
+### Lo particular de Puerto Rico
 
----
+- La Cordillera Central y El Yunque dejan zonas de sombra de radio. Un companion en un valle depende de que haya un repeater con línea de vista.
+- El concreto bloquea mucho la señal. Dentro de la casa el companion casi no sale; en la ventana, en el balcón o con una antena externa la diferencia es grande.
+- Si vienes de Meshtastic: un Companion se parece a un CLIENT_MUTE. No retransmite nada. Las retransmisiones las hacen los Repeaters y los Room Servers.
 
-## 3. Variantes de firmware Companion
+## 3. Variantes del firmware Companion
 
-El firmware Companion se flashea en una de tres variantes de transporte hacia el cliente:
+El firmware Companion viene en tres variantes, según cómo se conecta a tu teléfono o computadora:
 
-| Variante | Cliente | Usar cuando | Evitar cuando |
+| Variante | Se conecta con | Úsala cuando | Evítala cuando |
 |---|---|---|---|
-| **BLE** | App iOS/Android | Uso diario a pie, en el carro, hiking. El caso por defecto para portables | Necesitas logging continuo en una PC |
-| **USB (serial)** | Web app (app.meshcore.nz), `meshcore-cli`, `meshcore.js` | Carro con laptop/tablet, estación de mesa, scripts, debugging, nodo pegado a una Pi | Vas caminando |
-| **WiFi (TCP :5000)** | App en la misma LAN, `meshcore-cli`, integraciones | Nodo fijo en casa/oficina accesible desde varios dispositivos; base de operaciones en emergencia con un router local | Portables con batería (WiFi del ESP32 consume mucho) |
+| BLE | La app de iOS o Android | Uso diario a pie, en el carro o de hiking. Es la normal para portables | Necesitas guardar registros en una computadora todo el tiempo |
+| USB (serial) | La web app (app.meshcore.nz), `meshcore-cli`, `meshcore.js` | Carro con laptop o tablet, estación de mesa, scripts, depuración, nodo conectado a una Raspberry Pi | Vas caminando |
+| WiFi (TCP, puerto 5000) | La app en la misma red local, `meshcore-cli`, integraciones | Nodo fijo en casa u oficina que usan varios equipos; base de operaciones en una emergencia con un router local | Portables con batería, porque el WiFi del ESP32 consume mucho |
 
-**Hardware:**
-- **nRF52840** (RAK4631, T1000-E, T-Echo, Wio Tracker L1): mejor opción para portables BLE — consumo muy bajo.
-- **ESP32-S3** (Heltec V3/V4, XIAO S3 + Wio-SX1262): sirve, pero gasta más batería. Ideal para la variante WiFi o USB.
+Hardware:
 
----
+- **nRF52840** (RAK4631, T1000-E, T-Echo, Wio Tracker L1): la mejor opción para portables BLE, porque consume muy poco.
+- **ESP32-S3** (Heltec V3/V4, XIAO S3 con Wio-SX1262): funciona, pero gasta más batería. Va mejor con la variante WiFi o USB.
 
-## 4. Configuración paso a paso (app)
+## 4. Configuración paso a paso en la app
 
-1. **Flashear** con <https://flasher.meshcore.io/> → dispositivo → **Companion** (BLE/USB/WiFi) → 915 MHz. En el primer flasheo usa *Erase*.
-2. **Conectar** desde la app (BLE) o la web app (USB/WiFi).
-3. **Nombre del nodo:** algo identificable, ej. `WP4TZV-T1000` o `SirPedro📟`. El nombre viaja en los adverts.
-4. **Radio:** Settings → Radio → preset **USA/Canada (Recommended)**. Confirma: 910.525 / 62.5 / SF7 / CR5.
-5. **Path hash:** Settings → Experimental Settings → **Default Path Hash Size = 2 Bytes** → cerrar y reabrir la app.
-6. **TX power:** máximo del radio salvo que la batería sea crítica (§6).
+1. **Instala el firmware** desde <https://flasher.meshcore.io/>: escoge tu dispositivo, luego Companion (BLE, USB o WiFi) y 915 MHz. La primera vez usa *Erase*.
+2. **Conéctate** desde la app (BLE) o desde la web app (USB o WiFi).
+3. **Ponle nombre al nodo**, algo que te identifique, como `WP4TZV-T1000` o `SirPedro📟`. El nombre viaja en los adverts.
+4. **Radio:** Settings → Radio → preset USA/Canada (Recommended). Confirma que diga 910.525 / 62.5 / SF7 / CR5.
+5. **Path hash:** Settings → Experimental Settings → Default Path Hash Size = 2 Bytes. Después cierra la app y vuelve a abrirla.
+6. **TX power:** el máximo del radio, a menos que necesites estirar la batería (§7).
 7. **Ubicación:**
-   - Portable con GPS: compártela solo si quieres aparecer en mapas; puedes dejarla apagada y compartir manual.
-   - Sin GPS: deja lat/lon en blanco en portables (una posición fija en un portable es engañosa).
-8. **Contactos:** activa auto-agregar repeaters; para usuarios, decide si auto-agregar o manual (en zonas con mucha actividad, manual evita llenar la lista).
-9. **Canales:** `Public` viene por defecto. Canales regionales tipo hashtag (ej. `#puertorico`, `#test`) — usa los que la comunidad local haya acordado.
-10. **Advert inicial:** envía un **Flood Advert** una vez para que la red te conozca. Después, usa Zero-hop (§5).
-
----
+   - Portable con GPS: compártela solo si quieres salir en los mapas. Puedes dejarla apagada y compartirla a mano cuando haga falta.
+   - Portable sin GPS: deja la latitud y longitud en blanco. Una posición fija en algo que se mueve confunde a los demás.
+8. **Contactos:** activa que los repeaters se añadan solos. Para los usuarios, escoge si se añaden solos o a mano; donde hay mucha actividad, a mano evita que la lista se llene.
+9. **Canales:** `Public` viene por defecto. Para canales regionales con hashtag (por ejemplo `#puertorico` o `#test`), usa los que haya acordado la comunidad.
+10. **Primer advert:** envía un Flood Advert una vez para que la red te conozca. De ahí en adelante usa Zero-hop (§5).
 
 ## 5. Adverts en movimiento
 
-| Tipo | Alcance | Cuándo |
+| Tipo | A quién llega | Cuándo usarlo |
 |---|---|---|
-| **Zero-hop advert** | Solo nodos que te oyen directo | Llegaste a un sitio nuevo y quieres que los repeaters cercanos te vean |
-| **Flood advert** | Toda la malla vía repeaters | Primera vez en la red, o cambiaste de región (ej. de San Juan a Mayagüez) y necesitas que te encuentren |
+| Zero-hop advert | Solo a los nodos que te oyen directo | Llegaste a un sitio nuevo y quieres que los repeaters cercanos te vean |
+| Flood advert | A toda la malla, a través de los repeaters | Es tu primera vez en la red, o cambiaste de zona (por ejemplo, de San Juan a Mayagüez) y necesitas que te encuentren |
 
-Regla: **no** envíes flood adverts repetidos mientras manejas. Cada flood ocupa airtime en todos los repeaters de la isla.
+No envíes flood adverts uno tras otro mientras guías. Cada uno ocupa tiempo de aire en todos los repeaters de la isla.
 
----
-
-## 6. Cuándo usar cada modo en nodos portables
+## 6. Qué modo usar con un portable
 
 ### 6.1 Escenarios
 
-| Escenario | Firmware | Modo de red | Notas |
+| Escenario | Firmware | Red | Notas |
 |---|---|---|---|
-| **Día a día en área metro** (San Juan, Bayamón, Carolina) | Companion **BLE** | Malla pública (preset USA/Canada) | Hay repeaters; tú solo envías/recibes |
-| **En el carro** | Companion **BLE** o **USB** | Malla pública | Antena externa en el techo (magnética 915 MHz) mejora muchísimo. USB si llevas laptop/tablet con web app |
-| **Hiking con repeaters a la vista** (Yunque, Toro Negro con cobertura) | Companion **BLE** | Malla pública | nRF52 preferido. Zero-hop advert al llegar a un mirador |
-| **Hiking / campamento sin cobertura de repeaters** (cuevas, cañones, Mona, cayos) | Companion **BLE** | **Off-grid (client repeat)** | Solo dentro del grupo; ver §6.2 |
-| **Emergencia / huracán con infraestructura caída** | Companion **BLE** en los portables; **WiFi** o **USB** en la base | Pública si los repeaters (solares) siguen vivos; **Off-grid** si no | Coordinen antes qué frecuencia off-grid usarán |
-| **Evento / carrera / triatlón (staff)** | Companion **BLE** | Pública si hay repeater en el área; si no, off-grid o un repeater temporal en trípode | Un repeater temporal es mejor que muchos clients repitiendo |
-| **Estación en casa / oficina** | Companion **WiFi** o **USB** | Malla pública | Si quieres aportar cobertura, flashea un **Repeater** aparte en el techo |
-| **Gateway / observador MQTT** | — | — | Eso es un Repeater con bridge MQTT u observer, no un Companion |
+| Día a día en el área metro (San Juan, Bayamón, Carolina) | Companion BLE | Malla pública (preset USA/Canada) | Hay repeaters; tu nodo solo envía y recibe |
+| En el carro | Companion BLE o USB | Malla pública | Una antena magnética de 915 MHz en el techo mejora mucho la señal. USB si llevas laptop o tablet con la web app |
+| Hiking con repeaters a la vista (El Yunque, Toro Negro con cobertura) | Companion BLE | Malla pública | Mejor con nRF52. Envía un zero-hop advert al llegar a un mirador |
+| Hiking o campamento sin repeaters (cuevas, cañones, Mona, cayos) | Companion BLE | Off-grid (client repeat) | Solo dentro del grupo; ver §6.2 |
+| Emergencia o huracán sin infraestructura | Companion BLE en los portables; WiFi o USB en la base | La pública si los repeaters solares siguen funcionando; off-grid si no | Acuerden antes qué frecuencia off-grid van a usar |
+| Evento, carrera o triatlón (personal de apoyo) | Companion BLE | La pública si hay un repeater en la zona; si no, off-grid o un repeater temporal en trípode | Un repeater temporal funciona mejor que muchos companions repitiendo |
+| Estación en casa u oficina | Companion WiFi o USB | Malla pública | Si quieres aportar cobertura, instala aparte un Repeater en el techo |
+| Gateway u observador MQTT | No aplica | No aplica | Eso es un Repeater con puente MQTT u observer, no un Companion |
 
 ### 6.2 Off-grid (client repeat)
 
-Desde las versiones de 2026 existe el modo **Off-grid / client repeat**, configurado como un tipo de *Region* con su propia configuración de radio.
+Las versiones de 2026 tienen el modo Off-grid, también llamado client repeat. Se configura como un tipo de *Region* con su propia configuración de radio.
 
-- **Qué hace:** el companion **sí** retransmite paquetes, como un repeater pequeño. Útil para un grupo sin infraestructura (SAR, hiking remoto, emergencia).
-- **Restricción clave:** solo permite **frecuencias reservadas para off-grid**, distintas a la malla pública. Así no se contaminan las rutas de la red pública si alguien se olvida el modo puesto.
-- **Cómo:** App → Manage Regions → New → tipo **Off-grid** → escoger frecuencia reservada → *Set as Home*. Para volver: seleccionar el perfil de red público (`MeshCore.915`) / región comodín `*`.
-- **Todos los del grupo** deben estar en la misma región off-grid (misma frecuencia).
+- **Qué hace:** el companion sí retransmite paquetes, como un repeater pequeño. Sirve para un grupo sin infraestructura: búsqueda y rescate, hiking en zonas remotas, emergencias.
+- **Límite importante:** solo deja usar frecuencias reservadas para off-grid, distintas de las de la malla pública. Así, si alguien se olvida el modo puesto, no ensucia las rutas de la red pública.
+- **Cómo activarlo:** App → Manage Regions → New → tipo Off-grid → escoge una frecuencia reservada → *Set as Home*. Para volver, selecciona el perfil de la red pública (`MeshCore.915`) o la región comodín `*`.
+- Todo el grupo tiene que estar en la misma región off-grid, con la misma frecuencia.
 
-**Usar off-grid cuando:**
-- No hay repeaters alcanzables y el grupo necesita relevo entre sí.
-- El grupo está disperso en terreno quebrado (líneas de cuadrillas, cañones, búsqueda y rescate).
+Usa off-grid cuando:
 
-**No usar off-grid cuando:**
-- Hay un repeater público al alcance — usa la malla pública.
-- Vas a regresar a zona urbana: **sal del modo off-grid antes**.
-- Es para "tener más alcance" en el día a día. Para eso se instala un repeater fijo.
+- No llegas a ningún repeater y el grupo necesita pasarse los mensajes entre sí.
+- El grupo está regado en terreno quebrado: cuadrillas, cañones, búsqueda y rescate.
 
-### 6.3 Regla de oro para portables
+No lo uses cuando:
 
-> **Un portable nunca se flashea como Repeater.** Un repeater que se mueve crea rutas que dejan de existir y degrada la malla para todos. Si quieres aportar cobertura, instala un repeater fijo, en altura y con energía estable.
+- Tienes un repeater público al alcance. En ese caso usa la malla pública.
+- Vas de regreso a la zona urbana. Sal del modo off-grid antes de llegar.
+- Lo quieres para tener más alcance en el día a día. Para eso se instala un repeater fijo.
 
----
+### 6.3 Un portable nunca es Repeater
+
+Un repeater que se mueve crea rutas que luego desaparecen, y eso empeora la malla para todos. Si quieres aportar cobertura, instala un repeater fijo, en un sitio alto y con energía estable.
 
 ## 7. Energía en portables
 
-| Situación | Recomendación |
+| Situación | Qué hacer |
 |---|---|
-| Uso normal | TX power máximo, GPS solo si lo necesitas |
-| Batería larga (campamento, emergencia) | Apaga GPS (en ESP32 es el mayor consumo extra), reduce brillo/pantalla, usa nRF52 |
-| ESP32 con batería | Evita la variante WiFi; prefiere BLE |
-| Carro | Alimenta por USB del vehículo; antena externa |
-
----
+| Uso normal | TX power al máximo; GPS solo si lo necesitas |
+| Necesitas que la batería dure (campamento, emergencia) | Apaga el GPS (en un ESP32 es lo que más gasta), baja el brillo de la pantalla y usa un nRF52 si puedes |
+| ESP32 con batería | Evita la variante WiFi; usa BLE |
+| Carro | Aliméntalo por el USB del carro y usa una antena externa |
 
 ## 8. Checklist antes de salir
 
-- [ ] Firmware Companion actualizado (y repeaters de la zona en ≥ 1.14 si usas hash de 2 bytes)
+- [ ] Firmware Companion al día (y los repeaters de la zona en 1.14 o más nuevo si usas hash de 2 bytes)
 - [ ] Preset USA/Canada: 910.525 / 62.5 / SF7 / CR5
-- [ ] Path hash = 2 bytes
-- [ ] Antena conectada **antes** de encender (transmitir sin antena puede dañar el SX1262)
+- [ ] Path hash en 2 bytes
+- [ ] Antena conectada antes de encender (transmitir sin antena puede dañar el SX1262)
 - [ ] Nombre del nodo y canales configurados
-- [ ] Batería cargada; GPS según necesidad
-- [ ] Si la actividad es remota: región off-grid creada y acordada con el grupo
-- [ ] Al regresar: volver a la red pública
-
----
+- [ ] Batería cargada; GPS encendido o apagado según lo que vayas a hacer
+- [ ] Si vas a una zona remota: región off-grid creada y acordada con el grupo
+- [ ] Al regresar: de vuelta en la red pública
 
 ## 9. Fuentes
 
-- [MeshCore — repositorio oficial](https://github.com/meshcore-dev/MeshCore)
-- [MeshCore FAQ — cambio a preset narrow (commit)](https://google.18789066745.workers.dev/meshcore-dev/MeshCore/commit/86225cd24acd83ac84c03491a2a0db733280ca7a)
-- [Spokane Mesh — migración a 910.525 / SF7 / BW62.5 / CR5](https://groups.google.com/g/spokanemeshnet/c/9861SZsRXNs)
-- [Blog MeshCore — Off-grid (client repeat) Mode, feb 2026](https://blog.meshcore.io/2026/02/13/off-grid-client-repeat-mode)
-- [Blog MeshCore — Path hash multibyte y loop detection, mar 2026](https://blog.meshcore.io/2026/03/06/path-diagnostics-improvements)
-- [MeshCore CLI — `path.hash.mode` (PR #1968)](https://github.com/meshcore-dev/MeshCore/pull/1968/files)
-- [Florida Mesh — Node Configuration](https://areyoumeshingwith.us/docs/meshcore/configuration/)
-- [MeshCore Western Australia — migración a 2 bytes](https://meshcorewestaus.pages.dev/)
+- [MeshCore: repositorio oficial](https://github.com/meshcore-dev/MeshCore)
+- [MeshCore: preguntas frecuentes](https://github.com/meshcore-dev/MeshCore/blob/main/docs/faq.md)
+- [Spokane Mesh: migración a 910.525 / SF7 / BW62.5 / CR5](https://groups.google.com/g/spokanemeshnet/c/9861SZsRXNs)
+- [Blog de MeshCore: modo Off-grid (client repeat), febrero 2026](https://blog.meshcore.io/2026/02/13/off-grid-client-repeat-mode)
+- [Blog de MeshCore: path hash de varios bytes y detección de lazos, marzo 2026](https://blog.meshcore.io/2026/03/06/path-diagnostics-improvements)
+- [MeshCore CLI: `path.hash.mode` (PR #1968)](https://github.com/meshcore-dev/MeshCore/pull/1968/files)
+- [Florida Mesh: configuración de nodos](https://areyoumeshingwith.us/docs/meshcore/configuration/)
+- [MeshCore Western Australia: migración a 2 bytes](https://meshcorewestaus.pages.dev/)
