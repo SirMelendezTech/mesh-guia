@@ -48,6 +48,6 @@ Guías escritas por WP4TZV.
 
 ## Licencia
 
-Las guías están bajo [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.es): puedes copiarlas, adaptarlas y compartirlas, también en talleres o con fines comerciales, si das crédito a WP4TZV y compartes tus cambios con la misma licencia. El texto legal está en [LICENSE-GUIAS.txt](LICENSE-GUIAS.txt).
+Las guías están bajo [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.es): puedes copiarlas, adaptarlas y compartirlas, también en talleres o con fines comerciales, si das crédito a WP4TZV y compartes tus cambios con la misma licencia. El texto legal está en [LICENSE](LICENSE).
 
-El código (`index.html`, `sw.js`, `favicon.svg`) está bajo la licencia MIT. Ver [LICENSE](LICENSE).
+El código (`index.html`, `sw.js`, `favicon.svg`) está bajo la licencia MIT. Ver [LICENSE-CODIGO.txt](LICENSE-CODIGO.txt).
