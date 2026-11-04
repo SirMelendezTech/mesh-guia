@@ -187,6 +187,9 @@
     border-left: 1px solid var(--line);
   }
   a.cell:hover { background: var(--cell-soft); }
+  a.cell .role { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .22em; }
+  a.cell:hover .role { text-decoration-thickness: 2px; }
+  .cell .retry { margin-top: 10px; }
   .cell.mt { --cell: var(--mt); --cell-soft: var(--mt-soft); }
   .cell.mc { --cell: var(--mc); --cell-soft: var(--mc-soft); }
   .cell .role { display: block; color: var(--cell); font-size: 1rem; }
@@ -234,15 +237,15 @@
   }
   .doc-bar .back { text-decoration: none; font-weight: 600; }
   .doc-bar .actions { display: flex; gap: 8px; margin-left: auto; }
-  .doc-bar .actions a { text-decoration: none; }
   .tag {
     font-weight: 800; font-size: .88rem; color: var(--accent);
   }
   .radio-strip {
-    display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 0 0 24px;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin: 0 0 24px;
     padding: 10px 14px; background: var(--accent-soft);
     font-size: .9rem; max-width: 72ch;
   }
+  .radio-strip dl { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 0; flex: 1 1 auto; }
   .radio-strip div { display: flex; gap: 6px; }
   .radio-strip dt { color: var(--muted); }
   .radio-strip dd { margin: 0; font-weight: 600; }
@@ -253,7 +256,7 @@
   .toc-title { font-weight: 800; font-size: .95rem; margin: 0 0 8px; }
   .toc ol { list-style: none; margin: 0; padding: 0; }
   .toc a {
-    display: block; padding: 5px 10px; border-radius: 4px; line-height: 1.3;
+    display: block; padding: 8px 10px; border-radius: 4px; line-height: 1.3;
     color: var(--muted); text-decoration: none; font-size: .9rem;
   }
   .toc a:hover { background: var(--sunk); color: var(--ink); }
@@ -285,7 +288,14 @@
   .md .anchor:hover, .md .anchor:focus-visible { opacity: 1; color: var(--accent); }
   .md p, .md ul, .md ol { margin: 0 0 14px; }
   .md li { margin: 4px 0; }
-  .md li > input[type="checkbox"] { margin-right: 8px; transform: scale(1.15); }
+  .md .checklist { list-style: none; padding-left: 0; }
+  .md .check-item { margin: 2px 0; }
+  .md .check-item label { display: flex; gap: 12px; align-items: flex-start; padding: 7px 0; cursor: pointer; }
+  .md .check-item input { width: 20px; height: 20px; margin: 3px 0 0; flex: none; accent-color: var(--accent); cursor: pointer; }
+  .md .check-item.done > label .check-text, .md .check-item.done > p > label .check-text { color: var(--muted); }
+  .check-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin: 0 0 22px; font-size: .9rem; color: var(--muted); }
+  .check-count.done { color: var(--accent); font-weight: 800; }
+  .md [tabindex="-1"]:focus { outline: none; }
   .md hr { border: 0; border-top: 1px solid var(--line); margin: 28px 0; }
   .md blockquote {
     margin: 0 0 18px; padding: 12px 16px;
@@ -309,7 +319,31 @@
   .md tr:last-child td { border-bottom: 0; }
   .md img { max-width: 100%; }
 
+  .msg p { margin: 0 0 10px; }
   .msg { padding: 16px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface); color: var(--muted); max-width: 46rem; }
+
+  .offline {
+    margin: 0; padding: 8px 16px; text-align: center; font-size: .9rem;
+    background: var(--sunk); color: var(--ink); border-bottom: 1px solid var(--line);
+  }
+  .toast {
+    position: fixed; left: 50%; bottom: 20px; z-index: 40; transform: translateX(-50%);
+    max-width: calc(100% - 32px); padding: 10px 16px; border-radius: 6px;
+    background: var(--ink); color: var(--paper); font-size: .92rem;
+    opacity: 0; pointer-events: none; transition: opacity .15s ease;
+  }
+  .toast.show { opacity: 1; }
+  .toast:empty { display: none; }
+
+  /* áreas táctiles de al menos 44px en pantallas táctiles */
+  @media (pointer: coarse) {
+    .toc a { padding: 12px 10px; }
+    .nav-link { padding: 10px; }
+    .nav-home { padding: 12px 10px; }
+    .md .anchor { display: inline-block; padding: 6px 10px; margin-left: 2px; }
+    .site-footer li a { display: inline-block; padding: 11px 0; }
+    .copy-btn { min-height: 44px; }
+  }
 
   /* ---------- móvil ---------- */
   @media (max-width: 860px) {
@@ -345,7 +379,7 @@
     .cell .proj { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .sidebar, .sidebar.open { transition: none; }
+    .sidebar, .sidebar.open, .toast { transition: none; }
     html { scroll-behavior: auto; }
   }
 
@@ -357,7 +391,7 @@
       color-scheme: light;
     }
     body { font-size: 10.5pt; background: #fff; }
-    .site-header, .sidebar, .backdrop, .skip, .toc-side, .toc-inline, .doc-bar .actions, .copy-btn, .copy-status, .md .anchor { display: none !important; }
+    .site-header, .sidebar, .backdrop, .skip, .toc-side, .toc-inline, .doc-bar .actions, .copy-btn, .copy-status, .md .anchor, .check-bar, .toast, .offline, .retry { display: none !important; }
     .layout { display: block; max-width: none; }
     main { padding: 0; }
     .doc-body { display: block; }
@@ -393,12 +427,14 @@
     <span>Tema oscuro</span>
   </button>
 </header>
+<p id="offline" class="offline" hidden>Sin conexión. Estás viendo las guías guardadas en este dispositivo.</p>
 
 <div class="layout">
   <nav id="sidebar" class="sidebar" aria-label="Guías"></nav>
   <button id="backdrop" class="backdrop" hidden tabindex="-1" aria-label="Cerrar menú"></button>
   <main id="content" tabindex="-1"><div class="msg">Cargando guías…</div></main>
 </div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
@@ -448,6 +484,8 @@ const RADIO = {
   }
 };
 const DISCORD = "https://discord.gg/3v6rRhNRpD";
+/* Repo de GitHub, para detectar guías nuevas cuando la página está en un dominio propio. */
+const REPO = "SirMelendezTech/mesh-guia";
 const LINKS = [
   ["Documentación de Meshtastic", "https://meshtastic.org/docs/"],
   ["MeshCore en GitHub", "https://github.com/meshcore-dev/MeshCore"],
@@ -462,11 +500,23 @@ const $ = (s, r = document) => r.querySelector(s);
 const nav = $("#sidebar");
 const main = $("#content");
 const header = $(".site-header");
+const toastEl = $("#toast");
+const offlineEl = $("#offline");
 let docs = [];
 let currentFile = null;
 let firstRoute = true;
+let navByClick = false;
+let routing = false;
 
 marked.setOptions({ gfm: true, breaks: false });
+
+/* ---------- almacenamiento (puede fallar en modo privado) ---------- */
+const store = (area) => ({
+  get(k, d) { try { const v = window[area].getItem(k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { window[area].setItem(k, JSON.stringify(v)); } catch {} }
+});
+const ls = store("localStorage");
+const ss = store("sessionStorage");
 
 /* ---------- utilidades ---------- */
 function groupOf(file) {
@@ -502,6 +552,35 @@ function radioRows(project) {
   const fw = firmwareOf(project);
   return fw ? [...r.rows, ["Firmware estable", fw]] : r.rows;
 }
+function loadErrorText(d) {
+  if (!navigator.onLine) {
+    return "No hay conexión y esta guía todavía no está guardada en este dispositivo. Ábrela una vez con internet para tenerla sin conexión.";
+  }
+  return `No se pudo cargar la guía (${esc(d.error)}).`;
+}
+
+/* ---------- avisos breves ---------- */
+let toastTimer;
+function toast(text) {
+  clearTimeout(toastTimer);
+  toastEl.textContent = text;
+  toastEl.classList.add("show");
+  toastTimer = setTimeout(() => { toastEl.classList.remove("show"); toastEl.textContent = ""; }, 2500);
+}
+function flash(statusEl, text) {
+  clearTimeout(statusEl._timer);
+  statusEl.textContent = text;
+  statusEl._timer = setTimeout(() => { statusEl.textContent = ""; }, 2500);
+}
+async function copyText(text) {
+  try { await navigator.clipboard.writeText(text); return true; } catch { return false; }
+}
+
+/* ---------- sin conexión ---------- */
+function syncOnline() { offlineEl.hidden = navigator.onLine; }
+window.addEventListener("online", syncOnline);
+window.addEventListener("offline", syncOnline);
+syncOnline();
 
 /* ---------- altura del encabezado ---------- */
 const setHeaderH = () => document.documentElement.style.setProperty("--header-h", header.offsetHeight + "px");
@@ -511,16 +590,24 @@ if ("ResizeObserver" in window) new ResizeObserver(setHeaderH).observe(header);
 /* ---------- detección automática en GitHub Pages ---------- */
 const CACHE_KEY = "meshpr-docs";
 const CACHE_TTL = 60 * 60 * 1000; // 1 hora: la API de GitHub sin token permite 60 consultas/hora por IP
+function cachedDiscovery() {
+  const c = ls.get(CACHE_KEY, null);
+  return c && Array.isArray(c.files) ? c : null;
+}
 async function discover() {
-  if (!location.hostname.endsWith("github.io")) return null;
-  try {
-    const c = JSON.parse(localStorage.getItem(CACHE_KEY) || "null");
-    if (c && Date.now() - c.t < CACHE_TTL && Array.isArray(c.files)) return c.files;
-  } catch {}
-  const owner = location.hostname.split(".")[0];
-  const seg = location.pathname.split("/").filter((s) => s && !/\.html?$/i.test(s));
-  const repo = seg.length ? seg[0] : `${owner}.github.io`;
-  const dir = seg.slice(1).join("/");
+  const c = cachedDiscovery();
+  if (c && Date.now() - c.t < CACHE_TTL) return c.files;
+  const host = location.hostname;
+  let owner, repo, dir;
+  if (host.endsWith("github.io")) {
+    owner = host.split(".")[0];
+    const seg = location.pathname.split("/").filter((s) => s && !/\.html?$/i.test(s));
+    repo = seg.length ? seg[0] : `${owner}.github.io`;
+    dir = seg.slice(1).join("/");
+  } else if (REPO) {
+    [owner, repo] = REPO.split("/");
+    dir = "";
+  } else return null;
   try {
     const r = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${dir}`);
     if (!r.ok) return null;
@@ -529,30 +616,46 @@ async function discover() {
       .filter((i) => i.type === "file" && /\.md$/i.test(i.name) && !/^readme\.md$/i.test(i.name))
       .map((i) => i.name);
     if (!md.length) return null;
-    try { localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), files: md })); } catch {}
+    ls.set(CACHE_KEY, { t: Date.now(), files: md });
     return md;
   } catch { return null; }
 }
 
 /* ---------- carga de archivos ---------- */
-async function loadDoc(d) {
-  if (d.text != null || d.error) return d;
-  try {
-    const r = await fetch(encodeURI(d.file), { cache: "no-cache" });
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    d.text = await r.text();
-    const h1 = d.text.match(/^#\s+(.+)$/m);
-    if (h1) d.title = cleanTitle(h1[1]);
-    const fw = d.text.match(/Firmware estable:\s*\*\*([^*]+)\*\*/i);
-    if (fw) d.firmware = fw[1].trim();
-    const rev = d.text.match(/Última revisión:\s*([^·\n]+)/i);
-    if (rev) d.revision = rev[1].trim();
-    const au = d.text.match(/Autor:\s*([^·\n]+)/i);
-    if (au) d.author = au[1].trim();
-  } catch (e) {
-    d.error = e.message;
-  }
-  return d;
+function loadDoc(d) {
+  if (d.text != null || d.error) return Promise.resolve(d);
+  if (d.pending) return d.pending;
+  d.pending = (async () => {
+    try {
+      const r = await fetch(encodeURI(d.file));
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      d.text = await r.text();
+      const h1 = d.text.match(/^#\s+(.+)$/m);
+      if (h1) d.title = cleanTitle(h1[1]);
+      const fw = d.text.match(/Firmware estable:\s*\*\*([^*]+)\*\*/i);
+      if (fw) d.firmware = fw[1].trim();
+      const rev = d.text.match(/Última revisión:\s*([^·\n]+)/i);
+      if (rev) d.revision = rev[1].trim();
+      const au = d.text.match(/Autor:\s*([^·\n]+)/i);
+      if (au) d.author = au[1].trim();
+    } catch (e) {
+      d.error = e.message || "error";
+    }
+    d.pending = null;
+    return d;
+  })();
+  return d.pending;
+}
+function retryDoc(d) {
+  d.error = null; d.text = null;
+  return loadDoc(d);
+}
+const makeDoc = (file) => ({ file, group: groupOf(file), title: prettify(file) });
+function sortDocs() {
+  const listed = ROLES.map((r) => r.file);
+  const order = (f) => { const i = listed.indexOf(f); return i === -1 ? 999 : i; };
+  docs.sort((a, b) => GROUP_ORDER.indexOf(a.group) - GROUP_ORDER.indexOf(b.group)
+    || order(a.file) - order(b.file) || a.file.localeCompare(b.file));
 }
 
 /* ---------- navegación lateral ---------- */
@@ -563,6 +666,7 @@ function navLabel(d) {
   return `<span class="role">${esc(r.label)}</span><span class="nav-place">${esc(place ? place.name : "")}</span>`;
 }
 function renderNav() {
+  const focused = nav.contains(document.activeElement) ? document.activeElement.getAttribute("href") : null;
   let html = `<a class="nav-home" href="#/"${currentFile ? "" : ' aria-current="page"'}>Inicio</a>`;
   for (const g of GROUP_ORDER) {
     const list = docs.filter((d) => d.group === g && !d.error);
@@ -575,45 +679,59 @@ function renderNav() {
     }
   }
   nav.innerHTML = html;
+  if (focused) [...nav.querySelectorAll("a")].find((a) => a.getAttribute("href") === focused)?.focus();
 }
 
 /* ---------- portada ---------- */
 function cellHtml(project, placeId, rowCls) {
   const pc = projClass(project);
+  const id = `cell-${pc}-${placeId}`;
   const r = ROLES.find((x) => x.project === project && x.place === placeId);
   const proj = `<span class="proj">${project}: </span>`;
   if (!r) {
     const gap = GAPS[`${project}:${placeId}`];
-    return `<div class="cell empty ${pc} ${rowCls}">${proj}<p>${gap || "Sin guía todavía."}</p></div>`;
+    return `<div id="${id}" class="cell empty ${pc} ${rowCls}" data-state="gap">${proj}<p>${gap || "Sin guía todavía."}</p></div>`;
   }
   const d = docFor(r.file);
-  if (!d || d.error) {
-    return `<div class="cell empty ${pc} ${rowCls}">${proj}<span class="role">${esc(r.label)}</span>
-      <p>No se pudo cargar la guía${d && d.error ? ` (${esc(d.error)})` : ""}.</p></div>`;
+  if (d && d.error) {
+    return `<div id="${id}" class="cell empty ${pc} ${rowCls}" data-state="error">${proj}<span class="role">${esc(r.label)}</span>
+      <p>${loadErrorText(d)}</p>
+      <button class="icon-btn retry" type="button" data-retry="${esc(r.file)}">Reintentar</button></div>`;
   }
-  return `<a class="cell ${pc} ${rowCls}" href="${href(r.file)}">
+  const state = d && d.text != null ? "ok" : "loading";
+  const fw = state === "ok" ? (d.firmware ? `Firmware ${esc(d.firmware)}` : "") : "Cargando firmware…";
+  return `<a id="${id}" class="cell ${pc} ${rowCls}" data-state="${state}" href="${href(r.file)}">
     ${proj}<span class="role">${esc(r.label)}</span>
     <p>${esc(r.desc)}</p>
-    ${d.firmware ? `<small>Firmware ${esc(d.firmware)}</small>` : ""}
+    <small>${fw}</small>
   </a>`;
 }
+function rowClass(i) { return i === 0 ? "row-first" : i === PLACES.length - 1 ? "row-last" : ""; }
 function radioCard(project) {
   const pc = projClass(project);
-  const rows = radioRows(project);
+  const fw = firmwareOf(project);
   return `<section class="radio ${pc}" aria-labelledby="radio-${pc}">
     <div class="radio-top">
       <h3 id="radio-${pc}">${project}</h3>
       <span class="copy-status" role="status" aria-live="polite"></span>
       <button class="icon-btn copy-btn" type="button" data-copy="${project}">Copiar valores</button>
     </div>
-    <dl>${rows.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${valHtml(v)}</dd>`).join("")}</dl>
+    <dl>${RADIO[project].rows.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${valHtml(v)}</dd>`).join("")}
+      <dt>Firmware estable</dt><dd data-fw="${project}">${fw ? esc(fw) : "cargando…"}</dd></dl>
     <p class="note">${esc(RADIO[project].note)}</p>
   </section>`;
+}
+function othersHtml() {
+  const others = docs.filter((d) => !roleOf(d.file) && !d.error);
+  if (!others.length) return "";
+  return `<section class="others" id="others"><h2>Otras guías</h2><ul>${others
+    .map((d) => `<li><a href="${href(d.file)}">${esc(d.title)}</a>${d.group !== "Otros" ? ` (${d.group})` : ""}</li>`)
+    .join("")}</ul></section>`;
 }
 function footerHtml() {
   const d = docs.find((x) => x.revision);
   const author = (docs.find((x) => x.author) || {}).author || "WP4TZV";
-  return `<footer class="site-footer">
+  return `<footer class="site-footer" id="footer">
     <p>Guías escritas por ${esc(author)}${d ? `. Última revisión: ${esc(d.revision)}` : ""}.
       Si algo no coincide con lo que usa tu zona, confirma con la comunidad.</p>
     <p>¿Dudas o preguntas? Escríbelas en el <a href="${DISCORD}" target="_blank" rel="noopener">Discord de la comunidad</a>.</p>
@@ -633,63 +751,112 @@ function showHome() {
       <div class="picker-head mt" aria-hidden="true">Meshtastic</div>
       <div class="picker-head mc" aria-hidden="true">MeshCore</div>`;
   PLACES.forEach((p, i) => {
-    const rc = i === 0 ? "row-first" : i === PLACES.length - 1 ? "row-last" : "";
+    const rc = rowClass(i);
     html += `<div class="place ${rc}"><strong>${esc(p.name)}</strong><span>${esc(p.hint)}</span></div>`;
     html += cellHtml("Meshtastic", p.id, rc) + cellHtml("MeshCore", p.id, rc);
   });
-  html += `</div>`;
-
-  html += `<section class="radio-wrap" aria-labelledby="radio-title">
-    <h2 id="radio-title">Radio de la isla</h2>
-    <p>Estos valores tienen que ser iguales en todos los nodos de cada red, o no se escuchan entre sí.</p>
-    <div class="radio-grid">${Object.keys(RADIO).map(radioCard).join("")}</div>
-  </section>`;
-
-  const others = docs.filter((d) => !roleOf(d.file) && !d.error);
-  if (others.length) {
-    html += `<section class="others"><h2>Otras guías</h2><ul>${others
-      .map((d) => `<li><a href="${href(d.file)}">${esc(d.title)}</a>${d.group !== "Otros" ? ` (${d.group})` : ""}</li>`)
-      .join("")}</ul></section>`;
-  }
-  html += footerHtml();
+  html += `</div>
+    <section class="radio-wrap" aria-labelledby="radio-title">
+      <h2 id="radio-title">Radio de la isla</h2>
+      <p>Estos valores tienen que ser iguales en todos los nodos de cada red, o no se escuchan entre sí.</p>
+      <div class="radio-grid">${Object.keys(RADIO).map(radioCard).join("")}</div>
+    </section>
+    ${othersHtml()}
+    ${footerHtml()}`;
   main.innerHTML = html;
+  lastFooter = footerHtml();
   spyHeads = [];
 }
+let lastFooter = "";
+/* Actualiza la portada en su lugar cuando llegan las guías, sin perder el foco. */
+function swapEl(oldEl, newHtml) {
+  const hadFocus = oldEl.contains(document.activeElement);
+  const tpl = document.createElement("template");
+  tpl.innerHTML = newHtml.trim();
+  const el = tpl.content.firstElementChild;
+  oldEl.replaceWith(el);
+  if (hadFocus) (el.matches("a, button") ? el : el.querySelector("a, button"))?.focus();
+  return el;
+}
+function refreshHome() {
+  if (currentFile !== null || !$(".picker", main)) return;
+  PLACES.forEach((p, i) => {
+    for (const project of ["Meshtastic", "MeshCore"]) {
+      const old = document.getElementById(`cell-${projClass(project)}-${p.id}`);
+      if (!old) continue;
+      const html = cellHtml(project, p.id, rowClass(i));
+      const state = html.match(/data-state="(\w+)"/)[1];
+      if (old.dataset.state !== state || state === "ok") swapEl(old, html);
+    }
+  });
+  main.querySelectorAll("dd[data-fw]").forEach((dd) => {
+    const fw = firmwareOf(dd.dataset.fw);
+    if (fw) dd.textContent = fw;
+  });
+  const others = othersHtml();
+  const oldOthers = $("#others", main);
+  if (oldOthers) others ? swapEl(oldOthers, others) : oldOthers.remove();
+  else if (others) $("#footer", main).insertAdjacentHTML("beforebegin", others);
+  const f = footerHtml();
+  if (f !== lastFooter) { lastFooter = f; swapEl($("#footer", main), f); }
+}
 
-/* ---------- copiar valores de radio ---------- */
+/* ---------- clics dentro del contenido ---------- */
 main.addEventListener("click", async (e) => {
-  const btn = e.target.closest("[data-copy]");
-  if (!btn) return;
-  const project = btn.dataset.copy;
-  const text = `${project} (Puerto Rico)\n` + radioRows(project).map(([k, v]) => `${k}: ${v}`).join("\n");
-  const status = btn.parentElement.querySelector(".copy-status");
-  try {
-    await navigator.clipboard.writeText(text);
-    status.textContent = "Copiado";
-  } catch {
-    status.textContent = "No se pudo copiar. Selecciona los valores a mano.";
+  const copyBtn = e.target.closest("[data-copy]");
+  if (copyBtn) {
+    const project = copyBtn.dataset.copy;
+    const text = `${project} (Puerto Rico)\n` + radioRows(project).map(([k, v]) => `${k}: ${v}`).join("\n");
+    const status = copyBtn.parentElement.querySelector(".copy-status");
+    flash(status, (await copyText(text)) ? "Copiado" : "No se pudo copiar. Selecciona los valores a mano.");
+    return;
   }
-  setTimeout(() => { status.textContent = ""; }, 2500);
+  const retryBtn = e.target.closest("[data-retry]");
+  if (retryBtn) {
+    const d = docFor(retryBtn.dataset.retry);
+    if (!d) return;
+    retryBtn.disabled = true;
+    retryBtn.textContent = "Cargando…";
+    await retryDoc(d);
+    renderNav();
+    if (currentFile === null) refreshHome();
+    else if (currentFile === d.file) showDoc(d.file, null, null);
+    return;
+  }
+  const anchor = e.target.closest(".md .anchor");
+  if (anchor) {
+    e.preventDefault();
+    const h = anchor.getAttribute("href");
+    const ok = await copyText(location.origin + location.pathname + h);
+    toast(ok ? "Enlace a la sección copiado" : "No se pudo copiar el enlace");
+    if (location.hash !== h) location.hash = h;
+    return;
+  }
+  const tocLink = e.target.closest(".toc-inline a");
+  if (tocLink) tocLink.closest("details").open = false;
 });
 
 /* ---------- vista de una guía ---------- */
 function tocHtml(heads, file) {
   return `<ol>${heads.map((h) => `<li><a href="${href(file, h.id)}" data-id="${h.id}">${esc(h.text)}</a></li>`).join("")}</ol>`;
 }
-async function showDoc(file, anchor) {
+async function showDoc(file, anchor, restoreY) {
   let d = docFor(file);
   if (!d) {
-    d = { file, group: groupOf(file), title: prettify(file) };
+    d = makeDoc(file);
     docs.push(d);
+    sortDocs();
   }
   currentFile = file;
   renderNav();
-  main.innerHTML = `<div class="msg">Cargando ${esc(file)}…</div>`;
+  if (d.text == null && !d.error) main.innerHTML = `<div class="msg">Cargando la guía…</div>`;
   await loadDoc(d);
   if (currentFile !== file) return; // el usuario navegó a otra parte mientras cargaba
   if (d.error) {
     main.innerHTML = `<div class="doc-bar"><a class="back" href="#/">Todas las guías</a></div>
-      <div class="msg">No se pudo abrir <code>${esc(file)}</code> (${esc(d.error)}). Revisa que el archivo exista en el repositorio.</div>`;
+      <div class="msg"><p>${loadErrorText(d)}</p>
+      <button class="icon-btn retry" type="button" data-retry="${esc(file)}">Reintentar</button></div>`;
+    spyHeads = [];
     return;
   }
   const r = roleOf(file);
@@ -703,11 +870,14 @@ async function showDoc(file, anchor) {
       ${pc ? `<span class="tag">${d.group}</span>` : ""}
       <span class="actions">
         <button class="icon-btn" type="button" id="printBtn">Imprimir</button>
-        <a class="icon-btn" href="${encodeURI(d.file)}" download>Descargar .md</a>
       </span>
     </div>
-    ${rows.length ? `<dl class="radio-strip" aria-label="Radio ${d.group} de la isla">${rows
-      .map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${valHtml(v)}</dd></div>`).join("")}</dl>` : ""}
+    ${rows.length ? `<div class="radio-strip">
+      <dl aria-label="Radio ${d.group} de la isla">${rows
+        .map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${valHtml(v)}</dd></div>`).join("")}</dl>
+      <span class="copy-status" role="status" aria-live="polite"></span>
+      <button class="icon-btn copy-btn" type="button" data-copy="${d.group}">Copiar valores</button>
+    </div>` : ""}
     <div class="doc-body">
       <div>
         <details class="toc-inline"><summary>En esta guía</summary><nav class="toc" aria-label="En esta guía"></nav></details>
@@ -723,10 +893,11 @@ async function showDoc(file, anchor) {
   } else {
     main.querySelectorAll(".toc-inline, .toc-side").forEach((t) => t.remove());
   }
+  setupChecklists(article, d.file);
   $("#printBtn").addEventListener("click", () => window.print());
   spyHeads = heads.map((h) => h.el);
-  if (anchor) scrollToAnchor(anchor);
-  else window.scrollTo(0, 0);
+  if (anchor) scrollToAnchor(anchor, !firstRoute);
+  else window.scrollTo(0, restoreY || 0);
   updateSpy();
 }
 
@@ -746,7 +917,8 @@ function enhance(root, file) {
       a.className = "anchor";
       a.href = href(file, id);
       a.textContent = "#";
-      a.setAttribute("aria-label", `Enlace a la sección ${text}`);
+      a.title = "Copiar enlace a esta sección";
+      a.setAttribute("aria-label", `Copiar enlace a la sección ${text}`);
       h.appendChild(a);
     }
   });
@@ -793,10 +965,107 @@ function enhance(root, file) {
   return heads;
 }
 
-function scrollToAnchor(anchor) {
+/* ---------- listas de verificación que se pueden marcar ---------- */
+function setupChecklists(root, file) {
+  const key = "meshpr-check:" + file;
+  const stored = ls.get(key, null);
+  const lists = new Set();
+  const seen = {};
+  root.querySelectorAll('li input[type="checkbox"]').forEach((box, i) => {
+    const li = box.closest("li");
+    const host = box.parentNode;
+    const label = document.createElement("label");
+    const text = document.createElement("span");
+    text.className = "check-text";
+    let n = box.nextSibling;
+    while (n && !(n.nodeType === 1 && /^(UL|OL|P|DIV|TABLE|PRE|BLOCKQUOTE)$/.test(n.tagName))) {
+      const next = n.nextSibling;
+      text.appendChild(n);
+      n = next;
+    }
+    host.insertBefore(label, box);
+    label.append(box, text);
+    let id = slug(text.textContent).slice(0, 80) || "item-" + i;
+    if (seen[id]) id += "-" + seen[id]++; else seen[id] = 1;
+    box.dataset.key = id;
+    box.disabled = false;
+    box.removeAttribute("disabled");
+    box.checked = stored ? stored.includes(id) : box.defaultChecked;
+    li.classList.add("check-item");
+    li.classList.toggle("done", box.checked);
+    lists.add(box.closest("ul, ol"));
+  });
+  if (!lists.size) return;
+
+  const boxesOf = (list) => [...list.querySelectorAll('input[type="checkbox"]')].filter((b) => b.closest("ul, ol") === list);
+  const save = () => ls.set(key, [...root.querySelectorAll('input[type="checkbox"]:checked')].map((b) => b.dataset.key));
+  const update = (list) => {
+    const boxes = boxesOf(list);
+    const n = boxes.filter((b) => b.checked).length;
+    const bar = list._bar;
+    const count = bar.querySelector(".check-count");
+    const reset = bar.querySelector(".check-reset");
+    count.textContent = n === boxes.length ? "Lista completa." : `${n} de ${boxes.length} listos`;
+    count.classList.toggle("done", n === boxes.length);
+    if (!reset.dataset.undo) reset.disabled = n === 0;
+  };
+
+  lists.forEach((list) => {
+    list.classList.add("checklist");
+    const bar = document.createElement("div");
+    bar.className = "check-bar";
+    bar.innerHTML = `<span class="check-count" role="status" aria-live="polite"></span>
+      <button type="button" class="icon-btn check-reset">Desmarcar todo</button>`;
+    list.after(bar);
+    list._bar = bar;
+    update(list);
+    const reset = bar.querySelector(".check-reset");
+    reset.addEventListener("click", () => {
+      const boxes = boxesOf(list);
+      if (reset.dataset.undo) {
+        const prev = new Set(JSON.parse(reset.dataset.undo));
+        boxes.forEach((b) => { b.checked = prev.has(b.dataset.key); b.closest("li").classList.toggle("done", b.checked); });
+        delete reset.dataset.undo;
+        clearTimeout(reset._timer);
+        reset.textContent = "Desmarcar todo";
+      } else {
+        reset.dataset.undo = JSON.stringify(boxes.filter((b) => b.checked).map((b) => b.dataset.key));
+        boxes.forEach((b) => { b.checked = false; b.closest("li").classList.remove("done"); });
+        reset.textContent = "Deshacer";
+        reset._timer = setTimeout(() => {
+          delete reset.dataset.undo;
+          reset.textContent = "Desmarcar todo";
+          update(list);
+        }, 6000);
+      }
+      save();
+      update(list);
+    });
+  });
+
+  root.addEventListener("change", (e) => {
+    const box = e.target;
+    if (!box.matches || !box.matches('input[type="checkbox"]')) return;
+    box.closest("li").classList.toggle("done", box.checked);
+    save();
+    const list = box.closest("ul, ol");
+    if (list._bar) {
+      const reset = list._bar.querySelector(".check-reset");
+      if (reset.dataset.undo) { delete reset.dataset.undo; clearTimeout(reset._timer); reset.textContent = "Desmarcar todo"; }
+      update(list);
+    }
+  });
+}
+
+function scrollToAnchor(anchor, moveFocus) {
   const raw = decodeURIComponent(anchor);
   const el = document.getElementById(raw) || document.getElementById(slug(raw.replace(/-/g, " ")));
-  if (el) el.scrollIntoView({ block: "start" });
+  if (!el) return;
+  el.scrollIntoView({ block: "start" });
+  if (moveFocus) {
+    if (!el.hasAttribute("tabindex")) el.tabIndex = -1;
+    el.focus({ preventScroll: true });
+  }
 }
 
 /* ---------- sección actual en el índice ---------- */
@@ -812,31 +1081,51 @@ function updateSpy() {
     if (a.dataset.id === cur) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current");
   });
 }
+
+/* ---------- posición de lectura por página ---------- */
+if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+const SCROLL_KEY = "meshpr-scroll";
+const scrollPos = ss.get(SCROLL_KEY, {});
+let saveTimer;
 window.addEventListener("scroll", () => {
   if (!spyTick) { spyTick = true; requestAnimationFrame(updateSpy); }
+  if (routing) return;
+  scrollPos[currentFile || "home"] = Math.round(window.scrollY);
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => ss.set(SCROLL_KEY, scrollPos), 200);
 }, { passive: true });
+// un clic en un enlace interno abre arriba; Atrás/Adelante y recargar vuelven a donde estabas
+document.addEventListener("click", (e) => {
+  const a = e.target.closest('a[href^="#/"]');
+  if (a && !e.defaultPrevented) navByClick = true;
+});
 
 /* ---------- router ---------- */
 async function route() {
+  routing = true;
   setMenu(false, false);
   const h = location.hash;
+  const byClick = navByClick;
+  navByClick = false;
+  let anchor = null;
   if (h.startsWith("#/") && h.length > 2) {
     const rest = h.slice(2);
     const i = rest.indexOf("#");
     const file = decodeURIComponent(i === -1 ? rest : rest.slice(0, i));
-    const anchor = i === -1 ? null : rest.slice(i + 1);
+    anchor = i === -1 ? null : rest.slice(i + 1);
     if (anchor && file === currentFile && $(".md", main)) {
-      scrollToAnchor(anchor);
+      scrollToAnchor(anchor, true);
+      routing = false;
       return;
     }
-    await showDoc(file, anchor);
+    await showDoc(file, anchor, byClick ? 0 : scrollPos[file]);
   } else {
     showHome();
-    window.scrollTo(0, 0);
+    window.scrollTo(0, byClick ? 0 : scrollPos.home || 0);
   }
-  // al navegar, el foco va al contenido nuevo (no en la primera carga)
-  if (!firstRoute && !(h.includes("#", 2))) main.focus({ preventScroll: true });
+  if (!firstRoute && !anchor) main.focus({ preventScroll: true });
   firstRoute = false;
+  requestAnimationFrame(() => { routing = false; });
 }
 
 /* ---------- menú móvil ---------- */
@@ -875,6 +1164,20 @@ themeBtn.addEventListener("click", () => {
   syncThemeBtn();
 });
 
+/* ---------- uso sin conexión ---------- */
+function registerOffline() {
+  if (!("serviceWorker" in navigator)) return;
+  if (location.protocol !== "https:" && location.hostname !== "localhost") return;
+  navigator.serviceWorker.register("sw.js").catch(() => {});
+}
+function cacheDocsOffline() {
+  if (!("serviceWorker" in navigator) || !navigator.serviceWorker.ready) return;
+  navigator.serviceWorker.ready.then((reg) => {
+    const urls = docs.filter((d) => !d.error).map((d) => encodeURI(d.file));
+    reg.active?.postMessage({ type: "cache-urls", urls });
+  }).catch(() => {});
+}
+
 /* ---------- inicio ---------- */
 (async function init() {
   if (location.protocol === "file:") {
@@ -883,16 +1186,30 @@ themeBtn.addEventListener("click", () => {
       directamente desde <code>file://</code>.</div>`;
     return;
   }
-  const listed = ROLES.map((r) => r.file);
-  const files = (await discover()) || listed;
-  const order = (f) => { const i = listed.indexOf(f); return i === -1 ? 999 : i; };
-  docs = files
-    .map((file) => ({ file, group: groupOf(file), title: prettify(file) }))
-    .sort((a, b) => GROUP_ORDER.indexOf(a.group) - GROUP_ORDER.indexOf(b.group)
-      || order(a.file) - order(b.file) || a.file.localeCompare(b.file));
-  await Promise.all(docs.map(loadDoc));
+  registerOffline();
+  // la portada sale enseguida con lo que ya se sabe; las guías se completan al llegar
+  const known = cachedDiscovery();
+  docs = [...new Set([...ROLES.map((r) => r.file), ...(known ? known.files : [])])].map(makeDoc);
+  sortDocs();
   window.addEventListener("hashchange", route);
   route();
+
+  const onLoaded = () => {
+    renderNav();
+    if (currentFile === null) refreshHome();
+  };
+  const loads = docs.map((d) => loadDoc(d).then(onLoaded));
+  const found = await discover();
+  if (found) {
+    const fresh = found.filter((f) => !docFor(f)).map(makeDoc);
+    if (fresh.length) {
+      docs.push(...fresh);
+      sortDocs();
+      loads.push(...fresh.map((d) => loadDoc(d).then(onLoaded)));
+    }
+  }
+  await Promise.all(loads);
+  cacheDocsOffline();
 })();
 </script>
 </body>

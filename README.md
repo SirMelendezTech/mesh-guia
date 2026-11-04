@@ -24,6 +24,11 @@ Las guías son archivos `.md` en la raíz del repo. `index.html` los muestra en 
 1. Sube el `.md` nuevo a la raíz. En GitHub Pages aparece solo en "Otras guías".
 2. Para que tenga su celda en la tabla de la portada, añádelo a `ROLES` en `index.html` con su proyecto, lugar y descripción.
 3. Los valores de radio de la portada están en `RADIO`, en el mismo archivo. El firmware se lee de la línea `Firmware estable: **…**` de cada guía.
+4. Las listas con `- [ ]` se pueden marcar en la página. Lo marcado se guarda en el navegador de cada persona.
+
+## Sin conexión
+
+`sw.js` guarda la página y las guías después de la primera visita, para que se puedan abrir sin internet (en el campo, en un apagón). Solo funciona por HTTPS. Si cambias `sw.js`, sube el número de `VERSION` al principio del archivo.
 
 ## Verla en tu computadora
 
