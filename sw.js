@@ -1,15 +1,20 @@
 /* Service worker de Mesh PR: deja la página y las guías disponibles sin conexión.
-   - Archivos del sitio (index.html, .md, favicon): red primero; si no hay red
+   - Archivos del sitio (index.html, .md, manifest, íconos): red primero; si no hay red
      o tarda más de 3 s, se usa la copia guardada.
    - Librerías y fuentes de CDN: copia guardada primero, se actualiza por detrás.
    - API de GitHub: no se intercepta.
    Sube VERSION si cambias la lista CORE o la lógica de este archivo. */
-const VERSION = "v1";
+const VERSION = "v2";
 const CACHE = "meshpr-" + VERSION;
 const CORE = [
   "./",
   "index.html",
   "favicon.svg",
+  "manifest.webmanifest",
+  "icon-192.png",
+  "icon-512.png",
+  "icon-maskable-512.png",
+  "apple-touch-icon.png",
   "https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js",
   "https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"
 ];

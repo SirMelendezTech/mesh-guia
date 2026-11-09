@@ -30,6 +30,8 @@ Las guías son archivos `.md` en la raíz del repo. `index.html` los muestra en 
 
 `sw.js` guarda la página y las guías después de la primera visita, para que se puedan abrir sin internet (en el campo, en un apagón). Solo funciona por HTTPS. Si cambias `sw.js`, sube el número de `VERSION` al principio del archivo.
 
+También se puede instalar como app (`manifest.webmanifest` y los íconos `icon-*.png`). En Android y Chrome sale la opción "Instalar"; en iPhone, Compartir → "Añadir a pantalla de inicio". Si cambias el ícono, vuelve a generar los PNG desde `favicon.svg`.
+
 ## Verla en tu computadora
 
 ```sh
@@ -50,4 +52,4 @@ Guías escritas por WP4TZV.
 
 Las guías están bajo [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.es): puedes copiarlas, adaptarlas y compartirlas, también en talleres o con fines comerciales, si das crédito a WP4TZV y compartes tus cambios con la misma licencia. El texto legal está en [LICENSE](LICENSE).
 
-El código (`index.html`, `sw.js`, `favicon.svg`) está bajo la licencia MIT. Ver [LICENSE-CODIGO.txt](LICENSE-CODIGO.txt).
+El código (`index.html`, `sw.js`, `manifest.webmanifest`, `favicon.svg` y los íconos) está bajo la licencia MIT. Ver [LICENSE-CODIGO.txt](LICENSE-CODIGO.txt).
