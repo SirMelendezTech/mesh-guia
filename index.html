@@ -338,6 +338,18 @@
   }
   .toast.show { opacity: 1; }
   .toast:empty { display: none; }
+  .install {
+    position: fixed; left: 16px; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 35;
+    max-width: 34rem; margin: 0 auto; padding: 12px 14px;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px;
+    background: var(--surface); color: var(--ink);
+    border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 6px 24px rgb(0 0 0 / .18);
+  }
+  .install[hidden], .install [hidden] { display: none; }
+  .install p { margin: 0; flex: 1 1 16rem; font-size: .95rem; }
+  .install-actions { display: flex; gap: 8px; margin-left: auto; }
+  .install .install-yes { background: var(--link); border-color: var(--link); color: var(--surface); font-weight: 600; }
+  .install .install-yes:hover { filter: brightness(1.1); background: var(--link); }
 
   /* áreas táctiles de al menos 44px en pantallas táctiles */
   @media (pointer: coarse) {
@@ -347,6 +359,7 @@
     .md .anchor { display: inline-block; padding: 6px 10px; margin-left: 2px; }
     .site-footer li a { display: inline-block; padding: 11px 0; }
     .copy-btn { min-height: 44px; }
+    .install .icon-btn { min-height: 44px; }
   }
 
   /* ---------- móvil ---------- */
@@ -395,7 +408,7 @@
       color-scheme: light;
     }
     body { font-size: 10.5pt; background: #fff; }
-    .site-header, .sidebar, .backdrop, .skip, .toc-side, .toc-inline, .doc-bar .actions, .copy-btn, .copy-status, .md .anchor, .check-bar, .toast, .offline, .retry { display: none !important; }
+    .site-header, .sidebar, .backdrop, .skip, .toc-side, .toc-inline, .doc-bar .actions, .copy-btn, .copy-status, .md .anchor, .check-bar, .toast, .install, .offline, .retry { display: none !important; }
     .layout { display: block; max-width: none; }
     main { padding: 0; }
     .doc-body { display: block; }
@@ -439,6 +452,13 @@
   <main id="content" tabindex="-1"><div class="msg">Cargando guías…</div></main>
 </div>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
+<aside id="install" class="install" aria-label="Instalar la app" hidden>
+  <p id="installText" role="status"></p>
+  <div class="install-actions">
+    <button type="button" class="icon-btn install-yes" id="installYes">Instalar</button>
+    <button type="button" class="icon-btn" id="installNo">Ahora no</button>
+  </div>
+</aside>
 
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
@@ -1192,6 +1212,82 @@ function cacheDocsOffline() {
   }).catch(() => {});
 }
 
+/* ---------- aviso para instalar ----------
+   Sale después de 3 minutos con la página visible, sumando todas las visitas.
+   Android/Chrome/Edge: el botón abre el diálogo de instalación del navegador
+   (solo se puede abrir con un toque). iPhone/iPad: no hay forma de instalar
+   desde JS, así que el aviso explica cómo hacerlo. Con "Ahora no" se calla 30 días. */
+const INSTALL_AFTER = 3 * 60 * 1000;
+const INSTALL_SNOOZE = 30 * 24 * 60 * 60 * 1000;
+const installEl = $("#install");
+const installText = $("#installText");
+const installYes = $("#installYes");
+let installPrompt = null;
+let visibleSince = null;
+let installTimer;
+const isStandalone = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const wantsInstall = () => !isStandalone() && !ls.get("meshpr-installed", false) && Date.now() >= ls.get("meshpr-install-snooze", 0);
+const visibleTime = () => ls.get("meshpr-install-ms", 0) + (visibleSince ? Date.now() - visibleSince : 0);
+
+function pauseInstallClock() {
+  if (visibleSince == null) return;
+  ls.set("meshpr-install-ms", visibleTime());
+  visibleSince = null;
+  clearTimeout(installTimer);
+}
+function resumeInstallClock() {
+  if (visibleSince != null || document.visibilityState !== "visible" || !wantsInstall() || !installEl.hidden) return;
+  visibleSince = Date.now();
+  installTimer = setTimeout(() => { pauseInstallClock(); showInstall(); }, Math.max(0, INSTALL_AFTER - visibleTime()));
+}
+function showInstall() {
+  if (!installEl.hidden || !wantsInstall() || visibleTime() < INSTALL_AFTER) return;
+  if (installPrompt) {
+    installYes.hidden = false;
+    installText.textContent = "Instala Mesh PR para abrir las guías sin internet, como una app.";
+    $("#installNo").textContent = "Ahora no";
+  } else if (isIOS) {
+    installYes.hidden = true;
+    installText.textContent = "Para tener las guías sin internet, toca Compartir y luego \u201cAñadir a pantalla de inicio\u201d.";
+    $("#installNo").textContent = "Entendido";
+  } else return;
+  installEl.hidden = false;
+}
+function hideInstall(snooze) {
+  installEl.hidden = true;
+  if (snooze) {
+    ls.set("meshpr-install-snooze", Date.now() + INSTALL_SNOOZE);
+    ls.set("meshpr-install-ms", 0);
+  }
+}
+function setupInstall() {
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault(); // sin la mini barra de Chrome; el aviso propio decide cuándo
+    installPrompt = e;
+    showInstall();
+  });
+  window.addEventListener("appinstalled", () => {
+    ls.set("meshpr-installed", true);
+    installPrompt = null;
+    hideInstall(false);
+  });
+  installYes.addEventListener("click", async () => {
+    if (!installPrompt) return hideInstall(false);
+    const p = installPrompt;
+    installPrompt = null;
+    p.prompt();
+    const { outcome } = await p.userChoice.catch(() => ({ outcome: "dismissed" }));
+    hideInstall(outcome !== "accepted");
+  });
+  $("#installNo").addEventListener("click", () => hideInstall(true));
+  document.addEventListener("visibilitychange", () =>
+    document.visibilityState === "visible" ? resumeInstallClock() : pauseInstallClock());
+  window.addEventListener("pagehide", pauseInstallClock);
+  resumeInstallClock();
+  showInstall();
+}
+
 /* ---------- inicio ---------- */
 (async function init() {
   if (location.protocol === "file:") {
@@ -1201,6 +1297,7 @@ function cacheDocsOffline() {
     return;
   }
   registerOffline();
+  setupInstall();
   // la portada sale enseguida con lo que ya se sabe; las guías se completan al llegar
   const known = cachedDiscovery();
   docs = [...new Set([...ROLES.map((r) => r.file), ...(known ? known.files : [])])].map(makeDoc);
