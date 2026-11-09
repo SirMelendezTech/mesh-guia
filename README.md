@@ -32,6 +32,8 @@ Las guías son archivos `.md` en la raíz del repo. `index.html` los muestra en 
 
 También se puede instalar como app (`manifest.webmanifest` y los íconos `icon-*.png`). En Android y Chrome sale la opción "Instalar"; en iPhone, Compartir → "Añadir a pantalla de inicio". Si cambias el ícono, vuelve a generar los PNG desde `favicon.svg`.
 
+Después de 3 minutos con la página abierta (sumando visitas, sin contar pestañas en segundo plano) sale un aviso abajo para instalarla. Si la persona toca "Ahora no", no vuelve a salir en 30 días. Ya instalada, no sale.
+
 ## Verla en tu computadora
 
 ```sh
