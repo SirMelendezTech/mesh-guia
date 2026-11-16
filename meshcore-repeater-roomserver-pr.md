@@ -142,6 +142,7 @@ Antes de retransmitir, cada repeater espera un tiempo al azar para no chocar con
 - Los valores de fábrica dejan pocas ventanas de espera. Subirlos reduce las colisiones.
 - Si el firmware tiene el ajuste automático (autotune) activado, déjalo así. Poner un valor a mano lo apaga.
 - Revisa Neighbours después de una semana y cambia de perfil si ves más o menos vecinos de lo esperado.
+- Para calcularlo con los vecinos reales de tu repeater, usa la [calculadora de repetidores](#/calculadora). Te da los comandos y una prueba para comparar antes y después.
 
 ### 6.5 Regiones (opcional)
 

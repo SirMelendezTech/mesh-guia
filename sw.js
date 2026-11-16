@@ -1,14 +1,15 @@
-/* Service worker de Mesh PR: deja la página y las guías disponibles sin conexión.
-   - Archivos del sitio (index.html, .md, manifest, íconos): red primero; si no hay red
+/* Service worker de Mesh PR: deja la página, las guías y la calculadora disponibles sin conexión.
+   - Archivos del sitio (index.html, calculadora.js, .md, manifest, íconos): red primero; si no hay red
      o tarda más de 3 s, se usa la copia guardada.
    - Librerías y fuentes de CDN: copia guardada primero, se actualiza por detrás.
    - API de GitHub: no se intercepta.
    Sube VERSION si cambias la lista CORE o la lógica de este archivo. */
-const VERSION = "v2";
+const VERSION = "v3";
 const CACHE = "meshpr-" + VERSION;
 const CORE = [
   "./",
   "index.html",
+  "calculadora.js",
   "favicon.svg",
   "manifest.webmanifest",
   "icon-192.png",

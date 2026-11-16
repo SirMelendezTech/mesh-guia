@@ -17,6 +17,18 @@ MeshCore
 - [Companion](meshcore-companion-pr.md): nodos portátiles
 - [Repeater / Room Server](meshcore-repeater-roomserver-pr.md): infraestructura fija
 
+Herramientas
+
+- [Calculadora de repetidores](https://guia.prmsh.com/#/calculadora): pega la lista de vecinos de un repeater MeshCore y te da `txdelay`, `direct.txdelay` y `rxdelay` para probar, con los comandos y una prueba de campo
+
+## Calculadora de repetidores
+
+Está en `calculadora.js` y se abre en `#/calculadora`. Todo se calcula en el navegador.
+
+Lo que la persona escribe (rol, lista de vecinos, valores de antes y conteos de la prueba) se guarda en el enlace, por ejemplo `#/calculadora?rol=link&vecinos=…`. Así puede recargar sin perderlo y compartir el enlace con quien administra el repeater. Ese texto va después del `#`, así que no llega al servidor. Cada sección tiene su enlace (`#/calculadora#prueba`) para citarla en el Discord o en una guía.
+
+Los valores por densidad salen del white paper de cdme.sh (rev. 1.1, §9.4.2). Para cambiarlos, edita `TABLE` en `calculadora.js`.
+
 ## Añadir o editar una guía
 
 Las guías son archivos `.md` en la raíz del repo. `index.html` los muestra en el navegador, así que no hace falta compilar nada.
@@ -54,4 +66,4 @@ Guías escritas por WP4TZV.
 
 Las guías están bajo [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.es): puedes copiarlas, adaptarlas y compartirlas, también en talleres o con fines comerciales, si das crédito a WP4TZV y compartes tus cambios con la misma licencia. El texto legal está en [LICENSE](LICENSE).
 
-El código (`index.html`, `sw.js`, `manifest.webmanifest`, `favicon.svg` y los íconos) está bajo la licencia MIT. Ver [LICENSE-CODIGO.txt](LICENSE-CODIGO.txt).
+El código (`index.html`, `calculadora.js`, `sw.js`, `manifest.webmanifest`, `favicon.svg` y los íconos) está bajo la licencia MIT. Ver [LICENSE-CODIGO.txt](LICENSE-CODIGO.txt).
