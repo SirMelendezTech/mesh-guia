@@ -1,4 +1,4 @@
-<!-- Las líneas entre <!-- y --> no se ven en el PR. Bórralas o déjalas, como prefieras. -->
+<!-- Las notas como esta no se ven en el PR. Bórralas o déjalas, como prefieras. -->
 
 ## Qué cambia
 
