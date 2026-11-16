@@ -42,6 +42,7 @@ Para corregir o añadir una guía, verla en tu computadora o abrir un PR, lee [C
 - PRMSH: https://prmsh.com
 - Discord, para dudas o preguntas: https://discord.gg/3v6rRhNRpD
 - Mapa de la malla: https://malla.prmsh.com
+- Mapa de MeshCore: https://corescope.prmsh.com
 
 Guías escritas por WP4TZV.
 
