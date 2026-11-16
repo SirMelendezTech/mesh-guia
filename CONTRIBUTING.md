@@ -87,7 +87,7 @@ Si cambias el ícono, vuelve a generar los PNG (`icon-*.png`, `apple-touch-icon.
 
 - Un tema por PR. Es más fácil de revisar y de deshacer.
 - Título en español que diga qué cambia, por ejemplo "Actualizar firmware estable de MeshCore a v1.19".
-- En la descripción: qué cambiaste, por qué, y la fuente si cambia un valor. Si cambia algo visual, añade una captura.
+- La descripción sale con una plantilla (`.github/pull_request_template.md`): llena qué cambia, la evidencia y el riesgo. Si cambia un valor, enlaza la fuente; si cambia algo visual, añade una captura.
 - Trabaja en una rama, no en `main`. El sitio se publica cuando el PR se une a `main`.
 
 ## Licencia
