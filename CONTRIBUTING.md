@@ -24,6 +24,7 @@ Las guías son para gente de cualquier nivel, a veces leyendo en el campo desde 
 
 - Español de Puerto Rico, de tú. Oraciones cortas y verbos simples: "toca", "abre", "escoge".
 - Primero lo que la persona hace; después el porqué, si hace falta.
+- Usa las palabras de [GLOSSARY.md](GLOSSARY.md): una sola palabra por cada cosa, en todas las guías.
 - Usa el nombre que sale en la app tal cual: **Settings → Neighbours**, `CLIENT_MUTE`, `txdelay`.
 - Pasos en lista numerada solo si van en orden. Si no, lista con guiones.
 - Nombres de roles, comandos y valores literales van entre comillas invertidas: `ROUTER_LATE`, `set txdelay 1.2`.

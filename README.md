@@ -23,7 +23,7 @@ Herramientas
 
 ## Calculadora de repetidores
 
-Pega la lista de vecinos de un repeater MeshCore y te da los valores de espera, los comandos y una prueba para comparar antes y después. Está en español e inglés y funciona sin conexión.
+Pega la lista de vecinos de un repeater MeshCore y te da los tiempos de espera, los comandos y una prueba para comparar antes y después. Está en español e inglés y funciona sin conexión.
 
 Lo que escribes se guarda en el enlace (`#/calculadora?rol=…&vecinos=…`), así que puedes recargar sin perderlo y compartirlo con quien administra el repeater. Ese texto va después del `#`, así que no llega al servidor. Cada sección tiene su propio enlace (`#/calculadora#prueba`) para citarla.
 

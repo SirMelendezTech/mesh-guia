@@ -49,7 +49,7 @@ window.MeshCalc = (() => {
       otherLangLabel: "Read this calculator in English",
       share: "Compartir enlace",
       title: "Calculadora de repetidores",
-      lead: "Pega la lista de vecinos de tu repeater MeshCore. Te damos los valores de espera para probar, los comandos listos para copiar y una prueba sencilla para ver si ayudaron.",
+      lead: "Pega la lista de vecinos de tu repeater MeshCore. Te damos los tiempos de espera para probar, los comandos listos para copiar y una prueba sencilla para ver si ayudaron.",
       helpSummary: "¿Qué son estos ajustes?",
       helpWhy: "Cuando dos repeaters retransmiten el mismo mensaje a la vez, chocan y nadie lo recibe. Para evitarlo, cada uno espera un tiempo al azar antes de retransmitir. Mientras más vecinos tiene, más espacio necesita.",
       terms: [
@@ -163,7 +163,7 @@ window.MeshCalc = (() => {
       noteInvalid: (n, lines) => `Saltamos ${n} ${n === 1 ? "línea" : "líneas"} con formato que no reconocimos (${lines}). El conteo podría estar incompleto.`,
       noteDuplicates: (n) => `Hay ${n} ${n === 1 ? "nombre repetido" : "nombres repetidos"}. Usamos la lectura más reciente. Si dos nodos se llaman igual, usa sus ID.`,
       noteTruncated: "La respuesta de neighbors puede estar cortada. Get Neighbours en MeshMonitor o la vista de lista enseñan la tabla completa.",
-      noteNone: "Ningún vecino cuenta en esta lectura. Si el repeater se reinició hace poco, consulta otra vez cuando lleguen anuncios nuevos.",
+      noteNone: "Ningún vecino cuenta en esta lectura. Si el repeater se reinició hace poco, consulta otra vez cuando lleguen adverts nuevos.",
       noteTxLimit: "Con 12 vecinos o más, el white paper sugiere txdelay 2.1–2.5. El comando usa 2.0, el máximo que acepta MeshCore.",
       noNeighbors: "El repeater dijo que no tiene vecinos.",
       tableAria: "Vecinos",

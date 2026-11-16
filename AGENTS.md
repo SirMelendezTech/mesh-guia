@@ -8,7 +8,7 @@ Lee [CONTRIBUTING.md](CONTRIBUTING.md) antes de escribir texto de una guía, añ
 
 Romper uno de estos rompe el sitio o enlaces que la gente ya compartió.
 
-- **Guías:** cada `.md` de la raíz sale en el sitio como guía, salvo los que lista `NOT_GUIDES` en `index.html`. Un `.md` nuevo que sea del repo y no una guía va en esa lista.
+- **Guías:** cada `.md` de la raíz sale en el sitio como guía, salvo los que lista `NOT_GUIDES` en `index.html` (README, AGENTS, CONTRIBUTING, CLAUDE, GLOSSARY). Un `.md` nuevo que sea del repo y no una guía va en esa lista.
 - **Encabezado de guía:** `loadDoc()` en `index.html` lee con regex el `# título`, `Autor:`, `Firmware estable: **x**` y `Última revisión:`. Mantén ese formato.
 - **Anclas:** el id de cada sección sale del texto del `##` (`slug()`). Antes de cambiar un título, busca enlaces a esa ancla en el repo.
 - **Enlaces internos:** a otra guía, con el archivo (`otra.md#seccion`), que `enhance()` reescribe; a una vista, con `#/calculadora`.
@@ -29,4 +29,5 @@ No hay tests ni build.
 ## Idioma
 
 - Texto visible: español de Puerto Rico, sencillo y de tú (detalle en CONTRIBUTING.md). La calculadora también en inglés.
+- Palabras: usa el término de [GLOSSARY.md](GLOSSARY.md) para cada concepto en el texto visible (guías y calculadora). Si un concepto nuevo no está, añádelo ahí.
 - Mensajes de commit: una oración en inglés con qué cambia (mira `git log`). Títulos de PR: en español.
