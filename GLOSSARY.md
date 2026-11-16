@@ -48,7 +48,7 @@ _Avoid_: cliente, nodo personal
 
 **Repeater**:
 Rol de MeshCore para un nodo fijo que retransmite para extender la cobertura. No se usa para chatear.
-_Avoid_: repetidor, repetidora, nodo repetidor
+_Avoid_: repetidor, repetidora, nodo repetidor (excepción: el nombre de la herramienta, Calculadora de repetidores)
 
 **Room Server**:
 Rol de MeshCore para un nodo fijo que guarda los mensajes de un grupo para quien se conecte después.
