@@ -620,6 +620,8 @@ const RADIO = {
   }
 };
 const DISCORD = "https://discord.gg/3v6rRhNRpD";
+/* Archivos .md de la raíz que son del repo y no guías: no salen en el sitio. */
+const NOT_GUIDES = /^(readme|agents|contributing|claude|glossary)\.md$/i;
 /* Repo de GitHub, para detectar guías nuevas cuando la página está en un dominio propio. */
 const REPO = "SirMelendezTech/mesh-guia";
 const LINKS = [
@@ -752,7 +754,7 @@ async function discover() {
     if (!r.ok) return null;
     const items = await r.json();
     const md = items
-      .filter((i) => i.type === "file" && /\.md$/i.test(i.name) && !/^readme\.md$/i.test(i.name))
+      .filter((i) => i.type === "file" && /\.md$/i.test(i.name) && !NOT_GUIDES.test(i.name))
       .map((i) => i.name);
     if (!md.length) return null;
     ls.set(CACHE_KEY, { t: Date.now(), files: md });
