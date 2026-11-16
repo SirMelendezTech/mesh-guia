@@ -31,6 +31,7 @@
     --logo-edge: #2f66c8;
     --logo-hill: #9aa6b8;
     --logo-peak: #e99a0c;
+    --bad: #b3261e;
     --accent: var(--link);
     --accent-soft: var(--sunk);
     --header-h: 57px;
@@ -43,7 +44,7 @@
       --paper: #121826; --surface: #1a2233; --sunk: #232c40; --ink: #e6eaf2; --muted: #a1abbd;
       --line: #2c3649; --link: #8db8ff; --focus: #8db8ff;
       --mt: #6fd49a; --mt-soft: #183326; --mc: #a3acff; --mc-soft: #232a52;
-      --logo-edge: #7db4ff; --logo-hill: #56627a; --logo-peak: #ffb938;
+      --logo-edge: #7db4ff; --logo-hill: #56627a; --logo-peak: #ffb938; --bad: #ff9c8f;
       color-scheme: dark;
     }
   }
@@ -51,7 +52,7 @@
     --paper: #121826; --surface: #1a2233; --sunk: #232c40; --ink: #e6eaf2; --muted: #a1abbd;
     --line: #2c3649; --link: #8db8ff; --focus: #8db8ff;
     --mt: #6fd49a; --mt-soft: #183326; --mc: #a3acff; --mc-soft: #232a52;
-    --logo-edge: #7db4ff; --logo-hill: #56627a; --logo-peak: #ffb938;
+    --logo-edge: #7db4ff; --logo-hill: #56627a; --logo-peak: #ffb938; --bad: #ff9c8f;
     color-scheme: dark;
   }
 
@@ -285,11 +286,11 @@
   .md h2 { font-size: 1.5rem; line-height: 1.25; margin: 44px 0 12px; padding-top: 14px; border-top: 1px solid var(--line); }
   .md h3 { font-size: 1.2rem; margin: 28px 0 8px; }
   .md h4 { font-size: 1.02rem; margin: 22px 0 6px; }
-  .md .anchor {
+  .md .anchor, .calc .anchor {
     margin-left: 8px; text-decoration: none; color: var(--muted); font-weight: 400;
     opacity: .45;
   }
-  .md .anchor:hover, .md .anchor:focus-visible { opacity: 1; color: var(--accent); }
+  .md .anchor:hover, .md .anchor:focus-visible, .calc .anchor:hover, .calc .anchor:focus-visible { opacity: 1; color: var(--accent); }
   .md p, .md ul, .md ol { margin: 0 0 14px; }
   .md li { margin: 4px 0; }
   .md .checklist { list-style: none; padding-left: 0; }
@@ -317,11 +318,121 @@
   }
   .md pre code { background: none; padding: 0; font-size: .86rem; }
   .table-wrap { overflow-x: auto; margin: 0 0 18px; border: 1px solid var(--line); background: var(--surface); }
-  .md table { border-collapse: collapse; width: 100%; font-size: .93rem; }
-  .md th, .md td { padding: 9px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
-  .md th { background: var(--sunk); font-weight: 600; }
-  .md tr:last-child td { border-bottom: 0; }
+  .md table, .calc table { border-collapse: collapse; width: 100%; font-size: .93rem; }
+  .md th, .md td, .calc th, .calc td { padding: 9px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+  .md th, .calc th { background: var(--sunk); font-weight: 600; }
+  .md tr:last-child td, .calc tr:last-child td { border-bottom: 0; }
   .md img { max-width: 100%; }
+
+  /* ---------- herramientas en la portada ---------- */
+  .tools { margin-top: 44px; }
+  .tools > h2 { font-size: 1.45rem; margin: 0 0 6px; }
+  .tools > p { margin: 0 0 18px; color: var(--muted); max-width: 40rem; }
+  .tool {
+    display: block; max-width: 40rem; padding: 16px 18px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 6px;
+    color: var(--ink); text-decoration: none;
+  }
+  .tool:hover { background: var(--mc-soft); }
+  .tool strong { color: var(--mc); font-size: 1.1rem; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .22em; }
+  .tool:hover strong { text-decoration-thickness: 2px; }
+  .tool p { margin: 4px 0 0; font-size: .95rem; }
+  .tool small { display: block; margin-top: 6px; color: var(--muted); font-size: .85rem; }
+
+  /* ---------- calculadora de repetidores ---------- */
+  .calc { max-width: 72ch; }
+  .calc h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 10px; font-weight: 800; letter-spacing: -.01em; }
+  .calc h2 { font-size: 1.5rem; line-height: 1.25; margin: 44px 0 12px; padding-top: 14px; border-top: 1px solid var(--line); }
+  .calc h2:focus { outline: none; }
+  .calc h3 { font-size: 1.15rem; margin: 26px 0 8px; }
+  .calc p, .calc ul, .calc ol { margin: 0 0 14px; }
+  .calc li { margin: 4px 0; }
+  .calc code { font: .88em/1.4 var(--mono); background: var(--sunk); padding: 2px 5px; border-radius: 3px; }
+  .calc-lead { color: var(--muted); font-size: 1.06rem; }
+  .calc-hint { display: block; color: var(--muted); font-size: .9rem; }
+  .calc label { display: block; font-weight: 600; }
+  .calc-field { margin: 0 0 18px; }
+  .calc input, .calc select, .calc textarea {
+    display: block; width: 100%; margin-top: 6px; min-height: 44px; padding: 8px 10px;
+    font: inherit; color: var(--ink); background: var(--surface);
+    border: 1px solid var(--muted); border-radius: 6px;
+  }
+  .calc-field .calc-hint + textarea { margin-top: 8px; }
+  .calc textarea { min-height: 9.5rem; resize: vertical; font: .9rem/1.6 var(--mono); }
+  .calc input::placeholder, .calc textarea::placeholder { color: var(--muted); opacity: .8; }
+  .calc [aria-invalid="true"] { border: 2px solid var(--bad); }
+  .calc-error { color: var(--bad); font-weight: 600; margin: 8px 0 0; }
+  .calc-error:empty, .calc-status:empty { display: none; }
+  .calc-status { color: var(--muted); font-size: .92rem; }
+  .calc-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 18px; }
+  .calc .primary { background: var(--accent); border-color: var(--accent); color: var(--surface); font-weight: 600; }
+  .calc .primary:hover { background: var(--accent); filter: brightness(1.12); }
+  .calc details { margin: 0 0 14px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface); }
+  .calc summary { cursor: pointer; padding: 10px 14px; font-weight: 600; min-height: 44px; }
+  .calc details > div { padding: 2px 14px 6px; }
+  .calc-help { margin-bottom: 8px; }
+  .calc-terms { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 14px; margin: 0 0 14px; }
+  .calc-terms dt { white-space: nowrap; }
+  .calc-terms dd { margin: 0; }
+  .calc-three { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 10px 0 12px; }
+  .calc-three label { font-size: .9rem; }
+  .calc .radio-strip { max-width: none; }
+
+  /* los tres valores: lo único grande de la página */
+  .calc-values {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 0 0 12px; background: var(--surface);
+    border: 1px solid var(--line); border-top: 3px solid var(--accent); border-radius: 6px;
+  }
+  .calc-values > div { padding: 14px 16px 16px; min-width: 0; }
+  .calc-values > div + div { border-left: 1px solid var(--line); }
+  .calc-values dt code { background: none; padding: 0; font-weight: 600; font-size: .95rem; }
+  .calc-values dt span { display: block; color: var(--muted); font-size: .85rem; line-height: 1.3; margin-top: 2px; }
+  .calc-values dd { margin: 10px 0 0; }
+  .calc-values strong {
+    display: block; font: 800 2.4rem/1 var(--mono); color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .calc-values small { display: block; margin-top: 8px; color: var(--muted); font-size: .82rem; }
+  .calc-warn { margin: 0 0 16px; padding: 12px 16px; border-left: 4px solid var(--logo-peak); background: var(--sunk); }
+  .calc-warn p { margin: 0; }
+  .calc-warn p + p { margin-top: 8px; }
+  .calc-yes { color: var(--mt); font-weight: 600; }
+  .calc-no { color: var(--muted); }
+
+  .cmd-list { list-style: none; padding: 0; margin: 8px 0 18px; display: grid; gap: 6px; }
+  .cmd-list:empty { display: none; }
+  .calc .cmd-list li {
+    display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px;
+    margin: 0; padding: 4px 4px 4px 12px; background: var(--sunk); border-radius: 4px;
+  }
+  .calc .cmd-list code { background: none; padding: 0; font-size: .95rem; overflow-wrap: anywhere; }
+  .calc-share {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px;
+    margin-top: 24px; padding: 14px 16px; background: var(--accent-soft);
+  }
+  .calc-share p { margin: 0; flex: 1 1 18rem; }
+
+  .calc fieldset { margin: 0 0 14px; padding: 12px 16px 16px; border: 1px solid var(--line); border-radius: 6px; min-width: 0; }
+  .calc legend { padding: 0 6px; font-weight: 800; }
+  .calc fieldset > .calc-hint { margin: 2px 0 10px; }
+  .calc-samples { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .calc-samples label { font-size: .92rem; }
+  .calc-result { margin: 0 0 14px; padding: 12px 16px; background: var(--accent-soft); }
+  .calc-result h3 { margin: 0 0 6px; font-size: 1.05rem; }
+  .calc-result p { margin: 0 0 8px; }
+  .calc-result p:last-child { margin: 0; }
+  @media (max-width: 560px) {
+    .calc-values { grid-template-columns: 1fr; }
+    .calc-values > div { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 4px 12px; padding: 12px 14px; }
+    .calc-values > div + div { border-left: 0; border-top: 1px solid var(--line); }
+    .calc-values dd { margin: 0; text-align: right; }
+    .calc-values strong { font-size: 1.9rem; }
+    .calc-values small { margin-top: 4px; }
+    .calc-three { grid-template-columns: 1fr; }
+    .calc-terms { grid-template-columns: 1fr; gap: 2px; }
+    .calc-terms dd { margin-bottom: 8px; }
+  }
 
   .msg p { margin: 0 0 10px; }
   .msg { padding: 16px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface); color: var(--muted); max-width: 46rem; }
@@ -356,7 +467,7 @@
     .toc a { padding: 12px 10px; }
     .nav-link { padding: 10px; }
     .nav-home { padding: 12px 10px; }
-    .md .anchor { display: inline-block; padding: 6px 10px; margin-left: 2px; }
+    .md .anchor, .calc .anchor { display: inline-block; padding: 6px 10px; margin-left: 2px; }
     .site-footer li a { display: inline-block; padding: 11px 0; }
     .copy-btn { min-height: 44px; }
     .install .icon-btn { min-height: 44px; }
@@ -408,7 +519,7 @@
       color-scheme: light;
     }
     body { font-size: 10.5pt; background: #fff; }
-    .site-header, .sidebar, .backdrop, .skip, .toc-side, .toc-inline, .doc-bar .actions, .copy-btn, .copy-status, .md .anchor, .check-bar, .toast, .install, .offline, .retry { display: none !important; }
+    .site-header, .sidebar, .backdrop, .skip, .toc-side, .toc-inline, .doc-bar .actions, .copy-btn, .copy-status, .md .anchor, .calc .anchor, .calc .copy-btn, [data-calc-share], .calc-share, .check-bar, .toast, .install, .offline, .retry { display: none !important; }
     .layout { display: block; max-width: none; }
     main { padding: 0; }
     .doc-body { display: block; }
@@ -462,6 +573,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+<script src="calculadora.js"></script>
 <script>
 /* ============================================================
    CONFIGURACIÓN
@@ -519,6 +631,9 @@ const LINKS = [
 
 /* ============================================================ */
 const GROUP_ORDER = ["Meshtastic", "MeshCore", "Otros"];
+/* Herramientas: vistas propias que no son guías .md (calculadora.js). */
+const CALC = "calculadora";
+const CALC_TITLE = "Calculadora de repetidores";
 const ROLE_RE = /^(CLIENT(_MUTE|_BASE|_HIDDEN)?|ROUTER(_LATE|_CLIENT)?|REPEATER|TRACKER|SENSOR|TAK(_TRACKER)?|LOST_AND_FOUND)$/;
 const $ = (s, r = document) => r.querySelector(s);
 const nav = $("#sidebar");
@@ -702,6 +817,11 @@ function renderNav() {
       html += `<a class="nav-link ${pc}" href="${href(d.file)}"${cur}>${navLabel(d)}</a>`;
     }
   }
+  if (window.MeshCalc) {
+    html += `<h2 class="nav-group">Herramientas</h2>
+      <a class="nav-link mc" href="#/${CALC}"${currentFile === CALC ? ' aria-current="page"' : ""}>
+        <span>${CALC_TITLE}</span><span class="nav-place">MeshCore</span></a>`;
+  }
   nav.innerHTML = html;
   if (focused) [...nav.querySelectorAll("a")].find((a) => a.getAttribute("href") === focused)?.focus();
 }
@@ -786,6 +906,14 @@ function showHome() {
       <p>Estos valores tienen que ser iguales en todos los nodos de cada red, o no se escuchan entre sí.</p>
       <div class="radio-grid">${Object.keys(RADIO).map(radioCard).join("")}</div>
     </section>
+    ${window.MeshCalc ? `<section class="tools" aria-labelledby="tools-title">
+      <h2 id="tools-title">Herramientas</h2>
+      <a class="tool" href="#/${CALC}">
+        <strong>${CALC_TITLE}</strong>
+        <p>Pega la lista de vecinos de tu repeater MeshCore y obtén los valores de txdelay, direct.txdelay y rxdelay para probar, con los comandos listos para copiar.</p>
+        <small>Funciona sin conexión. Puedes compartir el enlace con tus resultados.</small>
+      </a>
+    </section>` : ""}
     ${othersHtml()}
     ${footerHtml()}`;
   main.innerHTML = html;
@@ -926,6 +1054,17 @@ async function showDoc(file, anchor, restoreY) {
   updateSpy();
 }
 
+/* ---------- vista de la calculadora ---------- */
+function showCalc(query, anchor, restoreY) {
+  currentFile = CALC;
+  renderNav();
+  window.MeshCalc.render(main, query, { toast, copyText });
+  document.title = window.MeshCalc.title();
+  spyHeads = [];
+  if (anchor) scrollToAnchor(anchor, !firstRoute);
+  else window.scrollTo(0, restoreY || 0);
+}
+
 /* ---------- mejoras al HTML renderizado ---------- */
 function enhance(root, file) {
   const known = new Set(docs.map((d) => d.file));
@@ -963,6 +1102,8 @@ function enhance(root, file) {
     if (a.classList.contains("anchor")) return;
     if (/^https?:\/\//i.test(h)) {
       a.target = "_blank"; a.rel = "noopener";
+    } else if (h.startsWith("#/")) {
+      // enlace a otra vista del sitio, por ejemplo #/calculadora
     } else if (/\.md(#.*)?$/i.test(h)) {
       const [f, frag] = h.split("#");
       a.href = href(f.split("/").pop(), frag);
@@ -1136,8 +1277,25 @@ async function route() {
   if (h.startsWith("#/") && h.length > 2) {
     const rest = h.slice(2);
     const i = rest.indexOf("#");
-    const file = decodeURIComponent(i === -1 ? rest : rest.slice(0, i));
+    const path = i === -1 ? rest : rest.slice(0, i);
     anchor = i === -1 ? null : rest.slice(i + 1);
+    const q = path.indexOf("?");
+    if (window.MeshCalc && (q === -1 ? path : path.slice(0, q)) === CALC) {
+      const query = q === -1 ? "" : path.slice(q + 1);
+      // ya abierta: un enlace sin datos nuevos solo mueve la vista y no borra lo escrito
+      if (currentFile === CALC && $(".calc", main) && (!query || query === window.MeshCalc.query())) {
+        if (anchor) scrollToAnchor(anchor, true);
+        window.MeshCalc.syncUrl();
+        routing = false;
+        return;
+      }
+      showCalc(query, anchor, byClick ? 0 : scrollPos[CALC]);
+      if (!firstRoute && !anchor) main.focus({ preventScroll: true });
+      firstRoute = false;
+      requestAnimationFrame(() => { routing = false; });
+      return;
+    }
+    const file = decodeURIComponent(path);
     if (anchor && file === currentFile && $(".md", main)) {
       scrollToAnchor(anchor, true);
       routing = false;
