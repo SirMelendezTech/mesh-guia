@@ -23,38 +23,19 @@ Herramientas
 
 ## Calculadora de repetidores
 
-Está en `calculadora.js` y se abre en `#/calculadora`. Todo se calcula en el navegador.
+Pega la lista de vecinos de un repeater MeshCore y te da los valores de espera, los comandos y una prueba para comparar antes y después. Está en español e inglés y funciona sin conexión.
 
-Lo que la persona escribe (rol, lista de vecinos, valores de antes y conteos de la prueba) se guarda en el enlace, por ejemplo `#/calculadora?rol=link&vecinos=…`. Así puede recargar sin perderlo y compartir el enlace con quien administra el repeater. Ese texto va después del `#`, así que no llega al servidor. Cada sección tiene su enlace (`#/calculadora#prueba`) para citarla en el Discord o en una guía.
+Lo que escribes se guarda en el enlace (`#/calculadora?rol=…&vecinos=…`), así que puedes recargar sin perderlo y compartirlo con quien administra el repeater. Ese texto va después del `#`, así que no llega al servidor. Cada sección tiene su propio enlace (`#/calculadora#prueba`) para citarla.
 
-La calculadora está en español e inglés (botón arriba a la derecha). Los textos están en `STR`, en `calculadora.js`. El idioma se recuerda en el navegador y va en el enlace (`idioma=en`).
+## Sin conexión y como app
 
-Los valores por densidad salen del white paper de cdme.sh (rev. 1.1, §9.4.2). Para cambiarlos, edita `TABLE` en `calculadora.js` y la tabla de §6.4 en `meshcore-repeater-roomserver-pr.md`, que usa los mismos valores.
+El sitio guarda la página, las guías y la calculadora después de la primera visita, para que abran sin internet (en el campo, en un apagón).
 
-## Añadir o editar una guía
+También se puede instalar como app. En Android y Chrome sale la opción "Instalar"; en iPhone, Compartir → "Añadir a pantalla de inicio". Después de 3 minutos con la página abierta (sumando visitas) sale un aviso para instalarla. Con "Ahora no" no vuelve a salir en 30 días.
 
-Las guías son archivos `.md` en la raíz del repo. `index.html` los muestra en el navegador, así que no hace falta compilar nada.
+## Contribuir
 
-1. Sube el `.md` nuevo a la raíz. En GitHub Pages aparece solo en "Otras guías".
-2. Para que tenga su celda en la tabla de la portada, añádelo a `ROLES` en `index.html` con su proyecto, lugar y descripción.
-3. Los valores de radio de la portada están en `RADIO`, en el mismo archivo. El firmware se lee de la línea `Firmware estable: **…**` de cada guía.
-4. Las listas con `- [ ]` se pueden marcar en la página. Lo marcado se guarda en el navegador de cada persona.
-
-## Sin conexión
-
-`sw.js` guarda la página y las guías después de la primera visita, para que se puedan abrir sin internet (en el campo, en un apagón). Solo funciona por HTTPS. Si cambias `sw.js`, sube el número de `VERSION` al principio del archivo.
-
-También se puede instalar como app (`manifest.webmanifest` y los íconos `icon-*.png`). En Android y Chrome sale la opción "Instalar"; en iPhone, Compartir → "Añadir a pantalla de inicio". Si cambias el ícono, vuelve a generar los PNG desde `favicon.svg`.
-
-Después de 3 minutos con la página abierta (sumando visitas, sin contar pestañas en segundo plano) sale un aviso abajo para instalarla. Si la persona toca "Ahora no", no vuelve a salir en 30 días. Ya instalada, no sale.
-
-## Verla en tu computadora
-
-```sh
-python3 -m http.server
-```
-
-Abre http://localhost:8000. Desde `file://` no funciona, porque el navegador no deja leer los `.md`.
+Para corregir o añadir una guía, verla en tu computadora o abrir un PR, lee [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Comunidad
 
