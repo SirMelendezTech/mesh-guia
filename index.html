@@ -985,15 +985,6 @@ main.addEventListener("click", async (e) => {
     if (location.hash !== h) location.hash = h;
     return;
   }
-  const calcAnchor = e.target.closest(".calc .anchor");
-  if (calcAnchor) {
-    e.preventDefault();
-    const h = calcAnchor.getAttribute("href");
-    const ok = await copyText(location.origin + location.pathname + h);
-    toast(ok ? "Enlace a la sección copiado" : "No se pudo copiar el enlace");
-    scrollToAnchor(h.slice(h.lastIndexOf("#") + 1), true);
-    return;
-  }
   const tocLink = e.target.closest(".toc-inline a");
   if (tocLink) tocLink.closest("details").open = false;
 });
@@ -1066,9 +1057,9 @@ async function showDoc(file, anchor, restoreY) {
 /* ---------- vista de la calculadora ---------- */
 function showCalc(query, anchor, restoreY) {
   currentFile = CALC;
-  document.title = `${CALC_TITLE} · Mesh PR`;
   renderNav();
   window.MeshCalc.render(main, query, { toast, copyText });
+  document.title = window.MeshCalc.title();
   spyHeads = [];
   if (anchor) scrollToAnchor(anchor, !firstRoute);
   else window.scrollTo(0, restoreY || 0);

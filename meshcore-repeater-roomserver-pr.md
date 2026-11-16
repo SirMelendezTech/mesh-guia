@@ -127,22 +127,43 @@ Al terminar:
 2. Ve a Settings → Sync Clock. La hora se toma del teléfono.
 3. Ve a Settings → Advert para anunciar el repeater en la malla.
 
-### 6.4 Tiempos de espera según la ubicación
+### 6.4 Tiempos de espera según la función y los vecinos
 
-Antes de retransmitir, cada repeater espera un tiempo al azar para no chocar con sus vecinos. Mientras más vecinos tenga, más debe esperar. Si tu versión de la app muestra los campos TX delay, Direct TX delay y RX delay, usa:
+Antes de retransmitir, cada repeater espera un tiempo al azar para no chocar con sus vecinos. Mientras más vecinos oye, más espacio necesita. Son tres ajustes: `txdelay` (mensajes de canal), `direct.txdelay` (mensajes directos) y `rxdelay` (espera antes de atender lo recibido, para dar prioridad a las señales fuertes). En la app pueden salir como TX delay, Direct TX delay y RX delay.
 
-| Perfil en PR | Ejemplos | Vecinos típicos | TX delay | Direct TX delay | RX delay |
-|---|---|---|---|---|---|
-| Montaña o backbone | Cerro Punta, Monte Jayuya, Maravilla, picos de El Yunque | 15 o más | 2 | 2 | 3 |
-| Elevado | Torres en lomas, edificios altos en Hato Rey o Condado | 10–20 | 1.5 | 1 | 3 |
-| Techo urbano | Azotea de 2 a 4 pisos | 5–10 | 0.8 | 0.4 | 3 |
-| Local o bajo | Balcón, interior | 1–3 | 0.3 | 0.1 | 3 |
-| Temporal | Trípode en un evento o una emergencia | Varía | 3 | 2.5 | 3 |
+La forma más fácil es la [calculadora de repetidores](#/calculadora): pegas la lista de vecinos y te da los valores, los comandos y una prueba para comparar antes y después. Usa estas mismas tablas.
 
-- Los valores de fábrica dejan pocas ventanas de espera. Subirlos reduce las colisiones.
+Primero, escoge según para qué sirve el repeater:
+
+| Función | Ejemplos en PR | txdelay | direct.txdelay | rxdelay |
+|---|---|---|---|---|
+| Cobertura local | Balcón, interior, azotea baja que da señal a Companions cerca | 0.5 | 0.3 | 0 |
+| Enlace entre repeaters | Cerro Punta, Monte Jayuya, Maravilla, picos de El Yunque | Tabla de abajo | Tabla de abajo | Tabla de abajo |
+| Las dos cosas | Torres en lomas, edificios altos en Hato Rey o Condado | Tabla de abajo | Tabla de abajo | 0 |
+
+Para enlace y para las dos cosas, los valores dependen de cuántos vecinos cuentan. Cuentan los vecinos directos con SNR mayor de 0 dB que se escucharon en los últimos 14 días (Remote Management → Neighbours).
+
+| Vecinos que cuentan | txdelay | direct.txdelay | rxdelay (solo enlace) |
+|---|---|---|---|
+| 0 | 1.0 | 0.4 | 2 |
+| 1 | 1.1 | 0.5 | 2 |
+| 2–3 | 1.2 | 0.6 | 3 |
+| 4 | 1.3 | 0.7 | 3 |
+| 5 | 1.4 | 0.7 | 3 |
+| 6 | 1.5 | 0.7 | 4 |
+| 7 | 1.6 | 0.8 | 4 |
+| 8 | 1.7 | 0.8 | 4 |
+| 9 | 1.8 | 0.8 | 5 |
+| 10 | 1.9 | 0.9 | 6 |
+| 11 | 2.0 | 0.9 | 7 |
+| 12 o más | 2.0 | 0.9 | 8 |
+
+- Los valores por vecinos salen del [white paper de ajuste de radio](https://cdme.sh/repeaters/radio-tuning-whitepaper) (rev. 1.1, §9.4.2). Con 12 vecinos o más sugiere `txdelay` de 2.1 a 2.5, pero MeshCore acepta hasta 2.0.
+- Para cobertura local, `rxdelay 0` deja que el repeater atienda enseguida los mensajes débiles que quizá solo él escucha. Si oye 4 repeaters o más, mide la entrega de canal antes de subir `txdelay`.
+- En un repeater temporal (trípode en un evento o una emergencia), escoge la función que va a cumplir y recalcula cuando ya esté puesto.
+- Cambia un ajuste a la vez y comprueba si llegan más mensajes. La calculadora trae una prueba de campo para eso.
 - Si el firmware tiene el ajuste automático (autotune) activado, déjalo así. Poner un valor a mano lo apaga.
-- Revisa Neighbours después de una semana y cambia de perfil si ves más o menos vecinos de lo esperado.
-- Para calcularlo con los vecinos reales de tu repeater, usa la [calculadora de repetidores](#/calculadora). Te da los comandos y una prueba para comparar antes y después.
+- Revisa Neighbours después de una semana y recalcula si oye más o menos vecinos de lo esperado.
 
 ### 6.5 Regiones (opcional)
 
@@ -206,7 +227,7 @@ Desde tu companion, con el equipo ya instalado en su sitio:
 | Se desconecta mientras lo administras (iOS) | iOS pausa el Bluetooth en segundo plano | Deja la app abierta |
 | Se desconecta mientras lo administras (Android) | Optimización de batería | Saca la app de la optimización |
 | Cualquiera puede escribir en el room | Guest password vacía | Pon una guest password |
-| Muchos errores en Status | Colisiones con los vecinos | Sube el perfil de espera (§6.4) |
+| Muchos errores en Status | Colisiones con los vecinos | Vuelve a contar los vecinos y ajusta los tiempos de espera (§6.4) |
 
 ## 10. Energía y sitio
 

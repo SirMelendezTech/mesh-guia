@@ -27,7 +27,9 @@ Está en `calculadora.js` y se abre en `#/calculadora`. Todo se calcula en el na
 
 Lo que la persona escribe (rol, lista de vecinos, valores de antes y conteos de la prueba) se guarda en el enlace, por ejemplo `#/calculadora?rol=link&vecinos=…`. Así puede recargar sin perderlo y compartir el enlace con quien administra el repeater. Ese texto va después del `#`, así que no llega al servidor. Cada sección tiene su enlace (`#/calculadora#prueba`) para citarla en el Discord o en una guía.
 
-Los valores por densidad salen del white paper de cdme.sh (rev. 1.1, §9.4.2). Para cambiarlos, edita `TABLE` en `calculadora.js`.
+La calculadora está en español e inglés (botón arriba a la derecha). Los textos están en `STR`, en `calculadora.js`. El idioma se recuerda en el navegador y va en el enlace (`idioma=en`).
+
+Los valores por densidad salen del white paper de cdme.sh (rev. 1.1, §9.4.2). Para cambiarlos, edita `TABLE` en `calculadora.js` y la tabla de §6.4 en `meshcore-repeater-roomserver-pr.md`, que usa los mismos valores.
 
 ## Añadir o editar una guía
 
