@@ -1,4 +1,5 @@
 /* Calculadora de repetidores MeshCore: la vista #/calculadora de Mesh PR.
+   - La creó Amoulier (https://github.com/Amoulier).
    - index.html llama a MeshCalc.render() cuando la ruta es #/calculadora.
    - Todo se calcula en el navegador. Lo que la persona escribe va en el enlace
      (#/calculadora?rol=…&vecinos=…), así puede recargar sin perderlo y compartirlo.
@@ -133,6 +134,7 @@ window.MeshCalc = (() => {
       },
       hSources: "Fuentes",
       sources: [
+        'Calculadora creada por <a href="https://github.com/Amoulier" target="_blank" rel="noopener">Amoulier</a>.',
         '<a href="https://cdme.sh/repeaters/radio-tuning-whitepaper" target="_blank" rel="noopener">White paper de ajuste de radio, revisión 1.1</a>. Sección 6.3 para el límite de 14 días y 9.4.2 para los valores por densidad.',
         '<a href="https://docs.meshcore.io/cli_commands/" target="_blank" rel="noopener">Comandos de MeshCore</a> y <a href="https://docs.domca.nl/en/cli/neighbors/" target="_blank" rel="noopener">formato de la respuesta de <code>neighbors</code></a>. El máximo de <code>txdelay</code> es 2.',
         '<a href="https://wiki.samesh.au/meshcore/repeater-settings" target="_blank" rel="noopener">Perfiles de repeaters de SA Mesh</a>, que recomiendan <code>rxdelay 0</code> para cobertura local.',
@@ -283,6 +285,7 @@ window.MeshCalc = (() => {
       },
       hSources: "Sources",
       sources: [
+        'Calculator created by <a href="https://github.com/Amoulier" target="_blank" rel="noopener">Amoulier</a>.',
         '<a href="https://cdme.sh/repeaters/radio-tuning-whitepaper" target="_blank" rel="noopener">Radio tuning white paper, revision 1.1</a>. Section 6.3 for the 14-day limit and 9.4.2 for the settings by density.',
         '<a href="https://docs.meshcore.io/cli_commands/" target="_blank" rel="noopener">MeshCore commands</a> and <a href="https://docs.domca.nl/en/cli/neighbors/" target="_blank" rel="noopener"><code>neighbors</code> reply format</a>. The maximum for <code>txdelay</code> is 2.',
         '<a href="https://wiki.samesh.au/meshcore/repeater-settings" target="_blank" rel="noopener">SA Mesh repeater profiles</a>, which recommend <code>rxdelay 0</code> for local coverage.',

@@ -27,6 +27,8 @@ Pega la lista de vecinos de un repeater MeshCore y te da los tiempos de espera, 
 
 Lo que escribes se guarda en el enlace (`#/calculadora?rol=…&vecinos=…`), así que puedes recargar sin perderlo y compartirlo con quien administra el repeater. Ese texto va después del `#`, así que no llega al servidor. Cada sección tiene su propio enlace (`#/calculadora#prueba`) para citarla.
 
+La calculadora la creó [Amoulier](https://github.com/Amoulier).
+
 ## Sin conexión y como app
 
 El sitio guarda la página, las guías y la calculadora después de la primera visita, para que abran sin internet (en el campo, en un apagón).
