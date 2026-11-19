@@ -1374,36 +1374,20 @@ function cacheDocsOffline() {
 }
 
 /* ---------- aviso para instalar ----------
-   Sale después de 3 minutos con la página visible, sumando todas las visitas.
+   Sale en cuanto el navegador permite instalar.
    Android/Chrome/Edge: el botón abre el diálogo de instalación del navegador
    (solo se puede abrir con un toque). iPhone/iPad: no hay forma de instalar
    desde JS, así que el aviso explica cómo hacerlo. Con "Ahora no" se calla 30 días. */
-const INSTALL_AFTER = 3 * 60 * 1000;
 const INSTALL_SNOOZE = 30 * 24 * 60 * 60 * 1000;
 const installEl = $("#install");
 const installText = $("#installText");
 const installYes = $("#installYes");
 let installPrompt = null;
-let visibleSince = null;
-let installTimer;
 const isStandalone = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 const wantsInstall = () => !isStandalone() && !ls.get("meshpr-installed", false) && Date.now() >= ls.get("meshpr-install-snooze", 0);
-const visibleTime = () => ls.get("meshpr-install-ms", 0) + (visibleSince ? Date.now() - visibleSince : 0);
-
-function pauseInstallClock() {
-  if (visibleSince == null) return;
-  ls.set("meshpr-install-ms", visibleTime());
-  visibleSince = null;
-  clearTimeout(installTimer);
-}
-function resumeInstallClock() {
-  if (visibleSince != null || document.visibilityState !== "visible" || !wantsInstall() || !installEl.hidden) return;
-  visibleSince = Date.now();
-  installTimer = setTimeout(() => { pauseInstallClock(); showInstall(); }, Math.max(0, INSTALL_AFTER - visibleTime()));
-}
 function showInstall() {
-  if (!installEl.hidden || !wantsInstall() || visibleTime() < INSTALL_AFTER) return;
+  if (!installEl.hidden || !wantsInstall()) return;
   if (installPrompt) {
     installYes.hidden = false;
     installText.textContent = "Instala Mesh PR para abrir las guías sin internet, como una app.";
@@ -1417,10 +1401,7 @@ function showInstall() {
 }
 function hideInstall(snooze) {
   installEl.hidden = true;
-  if (snooze) {
-    ls.set("meshpr-install-snooze", Date.now() + INSTALL_SNOOZE);
-    ls.set("meshpr-install-ms", 0);
-  }
+  if (snooze) ls.set("meshpr-install-snooze", Date.now() + INSTALL_SNOOZE);
 }
 function setupInstall() {
   window.addEventListener("beforeinstallprompt", (e) => {
@@ -1442,10 +1423,6 @@ function setupInstall() {
     hideInstall(outcome !== "accepted");
   });
   $("#installNo").addEventListener("click", () => hideInstall(true));
-  document.addEventListener("visibilitychange", () =>
-    document.visibilityState === "visible" ? resumeInstallClock() : pauseInstallClock());
-  window.addEventListener("pagehide", pauseInstallClock);
-  resumeInstallClock();
   showInstall();
 }
 
