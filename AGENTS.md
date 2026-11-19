@@ -8,7 +8,7 @@ Lee [CONTRIBUTING.md](CONTRIBUTING.md) antes de escribir texto de una guía, añ
 
 Romper uno de estos rompe el sitio o enlaces que la gente ya compartió.
 
-- **Guías:** cada `.md` de la raíz sale en el sitio como guía, salvo los que lista `NOT_GUIDES` en `index.html` (README, AGENTS, CONTRIBUTING, CLAUDE, GLOSSARY). Un `.md` nuevo que sea del repo y no una guía va en esa lista.
+- **Guías:** cada `.md` de la raíz sale en el sitio como guía, salvo los que lista `NOT_GUIDES` en `index.html` (README, AGENTS, CONTRIBUTING, CLAUDE, GLOSSARY). Un `.md` nuevo que sea del repo y no una guía va en esa lista y en un `Disallow` de `robots.txt`. Nunca bloquees en `robots.txt` el `.md` de una guía: Google lo necesita para mostrar la página.
 - **Encabezado de guía:** `loadDoc()` en `index.html` lee con regex el `# título`, `Autor:`, `Firmware estable: **x**` y `Última revisión:`. Mantén ese formato.
 - **Anclas:** el id de cada sección sale del texto del `##` (`slug()`). Antes de cambiar un título, busca enlaces a esa ancla en el repo.
 - **Enlaces internos:** a otra guía, con el archivo (`otra.md#seccion`), que `enhance()` reescribe; a una vista, con `#/calculadora`.

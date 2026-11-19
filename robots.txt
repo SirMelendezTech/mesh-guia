@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /README.md
+Disallow: /AGENTS.md
+Disallow: /CLAUDE.md
+Disallow: /CONTRIBUTING.md
+Disallow: /GLOSSARY.md
+
+Sitemap: https://guia.prmsh.com/sitemap.xml
