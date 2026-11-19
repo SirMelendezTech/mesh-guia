@@ -33,7 +33,7 @@ La calculadora la creó [Amoulier](https://github.com/Amoulier).
 
 El sitio guarda la página, las guías y la calculadora después de la primera visita, para que abran sin internet (en el campo, en un apagón).
 
-También se puede instalar como app. En Android y Chrome sale la opción "Instalar"; en iPhone, Compartir → "Añadir a pantalla de inicio". Después de 3 minutos con la página abierta (sumando visitas) sale un aviso para instalarla. Con "Ahora no" no vuelve a salir en 30 días.
+También se puede instalar como app. En Android y Chrome sale la opción "Instalar"; en iPhone, Compartir → "Añadir a pantalla de inicio". Cuando el navegador lo permite, sale un aviso para instalarla. Con "Ahora no" no vuelve a salir en 30 días.
 
 ## Contribuir
 
