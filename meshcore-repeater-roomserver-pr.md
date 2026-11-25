@@ -110,7 +110,7 @@ Dentro de Remote Management, en Settings:
 | Ajuste en la app | Valor recomendado en PR | Nota |
 |---|---|---|
 | Name | `PR-<PUEBLO>-<SITIO>` (por ejemplo `PR-SJU-Hatorey` o `PR-JAY-CerroPunta`) | Así es más fácil leer rutas y mapas |
-| Latitude / Longitude | Las coordenadas del sitio | Si está en tu casa, redondea a 3 decimales |
+| Latitude / Longitude | Las coordenadas exactas del sitio | Si está en tu casa, redondea a 2 decimales (ver abajo) |
 | Owner info | Tu indicativo y un contacto (por ejemplo `WP4TZV`) | Para que te encuentren si hay un problema |
 | Admin password | Una contraseña fuerte que no uses en otro sitio | Nunca dejes la de fábrica |
 | Guest password | Una contraseña que compartas con la comunidad | Con guest solo se ven estadísticas |
@@ -120,6 +120,17 @@ Dentro de Remote Management, en Settings:
 | Flood advert interval | 12 h | Más seguido gasta tiempo de aire en toda la isla |
 | Path hash size | 2 bytes | Si tu versión de la app lo muestra |
 | Repeat | On | Es su trabajo |
+
+**Precisión de la posición:** los mapas dibujan las rutas y los vecinos con la posición de cada repeater. MeshCore no tiene una barra de precisión: la precisión depende de cuántos decimales escribas. En Puerto Rico:
+
+| Decimales | Ejemplo | Precisión aproximada |
+|---|---|---|
+| 4 | `18.2208, -66.5901` | 11 m (36 ft) |
+| 3 | `18.221, -66.590` | 110 m (365 ft) |
+| 2 | `18.22, -66.59` | 1.1 km (0.7 millas) |
+
+- **Cerro, torre o techo que no es una casa:** las coordenadas exactas. Si la posición está a una milla de donde está de verdad, las líneas salen torcidas y no sabes qué repeater escucha a cuál.
+- **En tu casa:** 2 decimales. El mapa enseña el sector, pero no tu calle.
 
 Al terminar:
 
@@ -179,7 +190,7 @@ Desde la app puedes descubrir y administrar las regiones del repeater en Remote 
 | Ajuste en la app | Valor recomendado | Nota |
 |---|---|---|
 | Name | `PR-<GRUPO>-Room` (por ejemplo `PR-ARES-Room` o `PR-Yunque-Room`) | |
-| Latitude / Longitude | Donde está el equipo | |
+| Latitude / Longitude | Donde está el equipo | Igual que en el Repeater: exactas, o 2 decimales si está en una casa |
 | Owner info | El contacto de quien lo administra | |
 | Admin password | Fuerte, que no uses en otro sitio | |
 | Guest password | La clave del grupo | Nunca la dejes vacía (ver abajo) |

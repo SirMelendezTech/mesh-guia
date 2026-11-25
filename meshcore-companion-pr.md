@@ -60,6 +60,7 @@ Hardware:
 6. **TX power:** el máximo del radio, a menos que necesites estirar la batería (§7).
 7. **Ubicación:**
    - Portable con GPS: compártela solo si quieres salir en los mapas. Puedes dejarla apagada y compartirla a mano cuando haga falta.
+   - Si la escribes a mano desde tu casa, usa 2 decimales (`18.22, -66.59`). Así la precisión es de unos 1.1 km (0.7 millas) y el mapa no enseña tu calle.
    - Portable sin GPS: deja la latitud y longitud en blanco. Una posición fija en algo que se mueve confunde a los demás.
 8. **Contactos:** activa que los repeaters se añadan solos. Para los usuarios, escoge si se añaden solos o a mano; donde hay mucha actividad, a mano evita que la lista se llene.
 9. **Canales:** `Public` viene por defecto. Para canales regionales con hashtag (por ejemplo `#puertorico` o `#test`), usa los que haya acordado la comunidad.
