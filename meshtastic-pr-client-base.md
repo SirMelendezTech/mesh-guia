@@ -118,7 +118,7 @@ Valores para nodos fijos, tomados de las recomendaciones de PRMSH (https://mesht
 | Position | Position Broadcast Interval | 12 horas |
 | Position | GPS Update Interval | 6 horas |
 | Position | Position Flags | Encendidos: Altitude, Altitude MSL, Geoidal Separation. Apagados: Speed, Heading, Sats in View |
-| Position | Precisión en el canal público | Aproximada, no exacta |
+| Channels | Precisión de la posición en el canal primario | 1.5 km (4787 ft, casi una milla). Si no quieres que se vea tu sector, 2.9 km (1.8 millas) |
 | Telemetry | Device Metrics | 6 horas |
 | Telemetry | Environment Metrics | 6 horas |
 | Telemetry | Power Metrics | 1 hora (si tiene sensor de energía, por ejemplo en un equipo solar) |
@@ -128,16 +128,19 @@ Valores para nodos fijos, tomados de las recomendaciones de PRMSH (https://mesht
 
 **Hop limit:** `3` por defecto, y nunca más de 5.
 
+**Precisión de la posición:** tu BASE está en tu casa. Con 1.5 km (4787 ft), el mapa enseña el sector del pueblo, pero no tu calle, y los traceroutes se dibujan bastante cerca de donde van. No uses la posición exacta en el canal primario: con uplink a MQTT, tu dirección queda en internet. La exacta, solo en un canal privado del grupo.
+
 ### 6.2 Android
 
 1. Conecta el nodo base por Bluetooth.
 2. Settings → Radio Configuration → Device → Role = Client Base y Node Info Broadcast = 6 horas → Save.
 3. Settings → Radio Configuration → LoRa → Region `US`, el preset, Hop Limit 3, TX Power y OK to MQTT encendido → Save.
 4. Settings → Radio Configuration → Position → activa Fixed Position y entra las coordenadas (o usa las del teléfono mientras estás en el techo), apaga Smart Position y ajusta los intervalos y los Position Flags según la tabla → Save.
-5. Settings → Radio Configuration → Power → Power Saving apagado → Save.
-6. Settings → Module Configuration → Telemetry → Device y Environment cada 6 horas, Power cada 1 hora → Save.
-7. Settings → Module Configuration → Neighbor Info → Enabled y Transmit Over LoRa, cada 11 horas → Save.
-8. Espera el reinicio y confirma el rol en Device.
+5. Settings → Channels → toca el canal primario → deja la posición encendida y escoge en la barra 1.5 km (4787 ft) → Save.
+6. Settings → Radio Configuration → Power → Power Saving apagado → Save.
+7. Settings → Module Configuration → Telemetry → Device y Environment cada 6 horas, Power cada 1 hora → Save.
+8. Settings → Module Configuration → Neighbor Info → Enabled y Transmit Over LoRa, cada 11 horas → Save.
+9. Espera el reinicio y confirma el rol en Device.
 
 ### 6.3 iOS, iPadOS y macOS
 
@@ -145,10 +148,11 @@ Valores para nodos fijos, tomados de las recomendaciones de PRMSH (https://mesht
 2. Settings → Radio Configuration → Device → Device Role = Client Base y Node Info Broadcast Interval = Six Hours → Save.
 3. Settings → LoRa → Region `United States`, el preset, Number of Hops = 3, Transmit Power y OK to MQTT encendido → Save.
 4. Settings → Position → Fixed Position encendido, Smart Position apagado, y los intervalos y Position Flags según la tabla → Save.
-5. Settings → Power → Power Saving apagado → Save.
-6. Settings → Module Configuration → Telemetry → Device y Environment cada 6 horas, Power cada 1 hora → Save.
-7. Settings → Module Configuration → Neighbor Info → Enabled y Transmit Over LoRa, cada 11 horas → Save.
-8. Confirma el rol después del reinicio.
+5. Settings → Radio Configuration → Channels → toca el canal primario → deja la posición encendida y escoge en la barra 1.5 km (4787 ft) → Save.
+6. Settings → Power → Power Saving apagado → Save.
+7. Settings → Module Configuration → Telemetry → Device y Environment cada 6 horas, Power cada 1 hora → Save.
+8. Settings → Module Configuration → Neighbor Info → Enabled y Transmit Over LoRa, cada 11 horas → Save.
+9. Confirma el rol después del reinicio.
 
 ## 7. Marcar favoritos, paso a paso
 
@@ -361,6 +365,7 @@ Los pasos en la app (Android e iOS) son los de la sección 7 de la guía de port
 - [ ] Region `US`, el preset de la comunidad, Hop Limit 3 y OK to MQTT encendido
 - [ ] Intervalos de PRMSH para nodos fijos: Node Info 6 h, posición 12 h, telemetría 6 h, Neighbor Info 11 h, Map Report 6 h
 - [ ] Posición fija, Smart Position apagado e intervalo largo
+- [ ] Precisión de la posición en el canal primario: 1.5 km (4787 ft)
 - [ ] Power Saving apagado y energía con respaldo (solar o UPS)
 - [ ] Antena exterior, cable corto y caja sellada
 - [ ] Favoritos marcados desde el BASE: todos tus portátiles y nodos interiores
@@ -384,6 +389,7 @@ Los pasos en la app (Android e iOS) son los de la sección 7 de la guía de port
 - Blog de Meshtastic, cómo escoger el rol: https://meshtastic.org/blog/choosing-the-right-device-role/
 - Meshtastic, configuración del dispositivo: https://meshtastic.org/docs/configuration/radio/device/
 - Meshtastic, configuración de posición: https://meshtastic.org/docs/configuration/radio/position/
+- Meshtastic, canales y precisión de la posición: https://meshtastic.org/docs/configuration/radio/channels/
 - Meshtastic, integraciones MQTT: https://meshtastic.org/docs/software/integrations/mqtt/
 - Blog de Meshtastic, Zero-Cost Hops con routers favoritos: https://meshtastic.org/blog/zero-cost-hops-favorite-routers/
 - Meshtastic, administración remota de nodos: https://meshtastic.org/docs/configuration/remote-admin/

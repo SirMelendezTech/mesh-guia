@@ -223,7 +223,7 @@ Las credenciales de un broker privado son del operador. No las publiques ni las 
 
 | Canal | Uplink | Downlink | Precisión de la posición |
 |---|---|---|---|
-| Primario (LongFast) | Encendido | Apagado | Aproximada, no exacta |
+| Primario (LongFast) | Encendido | Apagado | 1.5 km (4787 ft, casi una milla) o menos precisa |
 | Privado del grupo (con PSK propio) | Lo que acuerde el grupo | Apagado, salvo que lo coordines con el operador | La que acuerde el grupo |
 
 **Por qué Downlink va apagado:** Downlink baja a la radio mensajes que vienen de internet. Si el broker no aplica la política zero-hop, esos mensajes se repiten por toda la malla con todos los saltos y la congestionan. Uplink solo sube, y no afecta la malla.
@@ -312,6 +312,7 @@ Proxy to Client gasta datos y batería del celular, y la app tiene que estar abi
 - Meshtastic, consejos de configuración (roles): https://meshtastic.org/docs/configuration/tips/
 - Blog de Meshtastic, cómo escoger el rol: https://meshtastic.org/blog/choosing-the-right-device-role/
 - Meshtastic, configuración de posición: https://meshtastic.org/docs/configuration/radio/position/
+- Meshtastic, canales y precisión de la posición: https://meshtastic.org/docs/configuration/radio/channels/
 - Meshtastic para Android, ajustes de radio y usuario: https://meshtastic.org/docs/software/android/user/settings-radio-user/
 - Meshtastic para Apple, ajustes: https://meshtastic.org/docs/software/apple/user/settings/
 - Meshtastic, módulo MQTT: https://meshtastic.org/docs/configuration/module/mqtt/

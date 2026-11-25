@@ -209,12 +209,17 @@ Intervalos para nodos fijos, tomados de las recomendaciones de PRMSH (https://me
 | Position | Position Broadcast Interval | 12 horas | 12 horas |
 | Position | GPS Update Interval | 6 horas | 6 horas |
 | Position | Position Flags | Encendidos: Altitude, Altitude MSL, Geoidal Separation. Apagados: Speed, Heading, Sats in View | Igual |
+| Channels | Precisión de la posición en el canal primario | La más precisa que deja la app: 729 m (2392 ft) | Igual. Si está en el patio de una casa, 1.5 km (4787 ft) |
 | Telemetry | Device y Environment Metrics | 6 horas | 6 horas |
 | Telemetry | Power Metrics | 1 hora (equipos solares) | 1 hora (equipos solares) |
 | Neighbor Info | Enabled y Transmit Over LoRa | Encendidos, cada 11 horas | Encendidos, cada 11 horas |
 | MQTT | Módulo MQTT | Apagado. El router se dedica a la radio, y un gateway cercano sube sus paquetes gracias a OK to MQTT | Apagado |
 | Security | Admin Keys | De 2 o 3 operadores | De 2 o 3 operadores |
 | Bluetooth | Pairing Mode | Fixed PIN propio | Fixed PIN propio |
+
+**Por qué la precisión más alta:** los mapas de `malla.prmsh.com` y `meshview.prmsh.com` dibujan los traceroutes y los vecinos con la posición de cada nodo. Si la posición del router está a una milla de donde está de verdad, las líneas salen torcidas y no sabes qué cerro escucha a cuál. Un cerro o una torre no es la casa de nadie.
+
+En el canal primario (LongFast), el firmware no deja pasar de 729 m (2392 ft), aunque escojas la posición exacta. La posición exacta solo sale en un canal privado con PSK propio.
 
 ### 6.2 Android
 
@@ -223,11 +228,12 @@ Intervalos para nodos fijos, tomados de las recomendaciones de PRMSH (https://me
 3. En Nodes, marca como favoritos los ROUTER y ROUTER_LATE vecinos que escucha directo.
 4. Settings → Radio Configuration → LoRa → Region `US`, el preset, Hop Limit 3 y TX Power → Save.
 5. Settings → Radio Configuration → Position → Fixed Position encendido, Smart Position apagado e intervalo largo → Save.
-6. Settings → Radio Configuration → Bluetooth → Fixed PIN → Save.
-7. Settings → Module Configuration → Telemetry → Device y Environment cada 6 horas, Power cada 1 hora → Save.
-8. Settings → Module Configuration → Neighbor Info → Enabled y Transmit Over LoRa, cada 11 horas → Save.
-9. Por último: Settings → Radio Configuration → Device → Role = Router o Router Late → Save.
-10. Desde tu portátil, prueba la Remote Administration antes de irte del sitio.
+6. Settings → Channels → toca el canal primario → deja la posición encendida y escoge en la barra 729 m (2392 ft) → Save.
+7. Settings → Radio Configuration → Bluetooth → Fixed PIN → Save.
+8. Settings → Module Configuration → Telemetry → Device y Environment cada 6 horas, Power cada 1 hora → Save.
+9. Settings → Module Configuration → Neighbor Info → Enabled y Transmit Over LoRa, cada 11 horas → Save.
+10. Por último: Settings → Radio Configuration → Device → Role = Router o Router Late → Save.
+11. Desde tu portátil, prueba la Remote Administration antes de irte del sitio.
 
 ### 6.3 iOS, iPadOS y macOS
 
@@ -237,11 +243,12 @@ Intervalos para nodos fijos, tomados de las recomendaciones de PRMSH (https://me
 4. En Nodes, marca como Favorite los ROUTER y ROUTER_LATE vecinos que escucha directo.
 5. Settings → LoRa → Region `United States`, el preset, Number of Hops = 3 y Transmit Power → Save.
 6. Settings → Position → Fixed Position encendido, Smart Position apagado e intervalo largo → Save.
-7. Settings → Bluetooth → Fixed PIN → Save.
-8. Settings → Module Configuration → Telemetry → Device y Environment cada 6 horas, Power cada 1 hora → Save.
-9. Settings → Module Configuration → Neighbor Info → Enabled y Transmit Over LoRa, cada 11 horas → Save.
-10. Por último: Settings → Radio Configuration → Device → Device Role = Router o Router Late → Save.
-11. Desde tu portátil, prueba la Remote Administration antes de irte del sitio.
+7. Settings → Radio Configuration → Channels → toca el canal primario → deja la posición encendida y escoge en la barra 729 m (2392 ft) → Save.
+8. Settings → Bluetooth → Fixed PIN → Save.
+9. Settings → Module Configuration → Telemetry → Device y Environment cada 6 horas, Power cada 1 hora → Save.
+10. Settings → Module Configuration → Neighbor Info → Enabled y Transmit Over LoRa, cada 11 horas → Save.
+11. Por último: Settings → Radio Configuration → Device → Device Role = Router o Router Late → Save.
+12. Desde tu portátil, prueba la Remote Administration antes de irte del sitio.
 
 **Por qué el rol va al final:** los routers intentan dormir más para ahorrar energía, y en algunos equipos eso hace que la conexión Bluetooth sea menos estable. Deja todo configurado antes de cambiar el rol.
 
@@ -296,6 +303,7 @@ Dar marcha atrás no es un fracaso. Si los números no dan, el nodo vuelve a CLI
 - [ ] Admin Keys de 2 o 3 operadores
 - [ ] Favoritos: solo los ROUTER y ROUTER_LATE vecinos que escucha directo
 - [ ] Posición fija, Smart Position apagado e intervalos largos
+- [ ] Precisión de la posición en el canal primario: 729 m (2392 ft)
 - [ ] Bluetooth con un Fixed PIN propio
 - [ ] OK to MQTT y Neighbor Info encendidos; módulo MQTT apagado
 - [ ] Intervalos de PRMSH para nodos fijos: Node Info 6 h, posición 12 h, telemetría 6 h, Neighbor Info 11 h
@@ -319,6 +327,7 @@ Dar marcha atrás no es un fracaso. Si los números no dan, el nodo vuelve a CLI
 - Blog de Meshtastic, cómo escoger el rol: https://meshtastic.org/blog/choosing-the-right-device-role/
 - Meshtastic, consejos de configuración (roles): https://meshtastic.org/docs/configuration/tips/
 - Meshtastic, administración remota de nodos: https://meshtastic.org/docs/configuration/remote-admin/
+- Meshtastic, canales y precisión de la posición: https://meshtastic.org/docs/configuration/radio/channels/
 - Firmware 2.7.26 de Meshtastic: https://github.com/meshtastic/firmware/releases/tag/v2.7.26.54e0d8d
 - Guías relacionadas: `meshtastic-pr-cliente-vs-mute.md` y `meshtastic-pr-client-base.md`
 
